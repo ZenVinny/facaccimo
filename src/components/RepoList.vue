@@ -1,30 +1,29 @@
 <template>
-  <section>
-    <b-loading is-full-page v-model="loading"></b-loading>
-    <b-field :disabled="!loading" label="Select a repository">
-      <b-autocomplete
-          v-model="repo"
-          placeholder="Choose repository"
-          field="full_name"
-          open-on-focus
-          :data="filteredDataObj"
-          @select="option => $emit('repo-selected', option)"
-      >
-        <template #empty>No repositories found</template>
-      </b-autocomplete>
-    </b-field>
-  </section>
+  <div>
+    <div v-if="loading" class="loading-text">Loading repositories...</div>
+    <div v-else>
+      <div class="field">
+        <label class="label">Select a repository</label>
+        <div class="control">
+          <input class="input" v-model="repo" placeholder="Choose repository" @focus="openDropdown">
+        </div>
+        <div v-if="filteredDataObj.length > 0" class="dropdown-list">
+          <div v-for="option in filteredDataObj" :key="option.full_name"
+               class="dropdown-item" @click="selectRepo(option)">
+            {{ option.full_name }}
+          </div>
+        </div>
+        <div v-else-if="repo" class="dropdown-empty">No repositories found</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import {BAutocomplete} from "buefy/src/components/autocomplete";
 import GitHubUtils from "@/GitHubUtils";
 
 export default {
   name: 'RepoList',
-  components: {
-    BAutocomplete
-  },
   props: {
     username: String,
     pat: String
@@ -32,32 +31,76 @@ export default {
   data: function () {
     return {
       repo: '',
-      selected: null,
       repos: [],
-      loading: true
+      loading: true,
+      showDropdown: false
     }
   },
   computed: {
     filteredDataObj() {
+      if (!this.showDropdown) return [];
       return this.repos.filter(option => {
         return (
-            option.full_name
-                .toString()
-                .toLowerCase()
-                .indexOf(this.repo.toLowerCase()) >= 0
+          option.full_name
+            .toString()
+            .toLowerCase()
+            .indexOf(this.repo.toLowerCase()) >= 0
         )
       })
     }
   },
+  methods: {
+    selectRepo(option) {
+      this.repo = option.full_name;
+      this.showDropdown = false;
+      this.$emit('repo-selected', option);
+    },
+    openDropdown() {
+      this.showDropdown = true;
+    }
+  },
   beforeMount() {
     let target = this;
-    GitHubUtils.getRepoList(this.username, this.pat).then(value => {
-      target.repos = value.data;
+    GitHubUtils.getAllRepos(this.username, this.pat).then(repos => {
+      target.repos = repos;
       target.loading = false;
+      if (repos.length === 0) {
+        this.$message.warning('No repositories found for this account.');
+      }
+    }).catch(error => {
+      target.loading = false;
+      this.$message.error('Failed to load repositories: ' + (error && error.message ? error.message : 'unknown error'));
     });
   }
 }
 </script>
 
 <style scoped>
+  .loading-text {
+    color: var(--ink-2);
+    padding: 8px 0;
+  }
+  .dropdown-list {
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--hair);
+    border-radius: 7px;
+    margin-top: 4px;
+    background: var(--surface-2);
+  }
+  .dropdown-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    color: var(--ink-2);
+    font-size: 13.5px;
+  }
+  .dropdown-item:hover {
+    background: var(--surface-3);
+    color: var(--ink);
+  }
+  .dropdown-empty {
+    padding: 8px 10px;
+    color: var(--ink-3);
+    font-size: 13.5px;
+  }
 </style>

@@ -5,8 +5,10 @@ export default class Chapter {
   groups;
 
   constructor(title, volume, last_updated, groups) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     this.volume = volume ?? '';
-    this.last_updated = last_updated ?? Math.floor((+new Date()) / 1000) + '';
+    this.last_updated = last_updated ?? Math.floor((+today) / 1000) + '';
     this.groups = groups ?? {};
     this.title = title ?? '';
   }

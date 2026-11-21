@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 const STRIP_REQUEST_HEADERS = ['host', 'origin', 'referer', 'connection'];
 const STRIP_RESPONSE_HEADERS = ['connection', 'transfer-encoding', 'access-control-allow-origin'];
+// Give up on an upstream that never answers instead of hanging the page.
+const UPSTREAM_TIMEOUT_MS = Number(process.env.UPSTREAM_TIMEOUT_MS || 30000);
 
 http.createServer((req, res) => {
   const corsHeaders = {
@@ -48,6 +50,11 @@ http.createServer((req, res) => {
     delete headers[header];
   }
   headers.host = targetUrl.host;
+  // MangaDex blocks browser User-Agents on its cover CDN. Replace with a
+  // non-browser UA so images can be fetched and displayed.
+  if (targetUrl.hostname.includes('mangadex.org')) {
+    headers['user-agent'] = 'facaccimo/1.0 (local tool)';
+  }
 
   const client = targetUrl.protocol === 'http:' ? http : https;
   const proxyReq = client.request(targetUrl, {method: req.method, headers}, proxyRes => {
@@ -59,19 +66,45 @@ http.createServer((req, res) => {
     if (responseHeaders.location && /^https?:\/\//.test(responseHeaders.location)) {
       responseHeaders.location = '/' + responseHeaders.location.replace(/^https?:\/\//, '');
     }
+    proxyRes.on('error', err => {
+      console.error(req.method + ' ' + target + ' response failed: ' + err.message);
+      fail(502, 'Proxy upstream error: ' + err.message);
+    });
     res.writeHead(proxyRes.statusCode, {...responseHeaders, ...corsHeaders});
     proxyRes.pipe(res);
   });
 
+  // Header/stream errors used to be unhandled and killed the whole process.
+  function fail(status, body) {
+    if (res.writableEnded) {
+      return;
+    }
+    if (!res.headersSent) {
+      res.writeHead(status, corsHeaders);
+    }
+    res.end(body);
+  }
+
+  proxyReq.setTimeout(UPSTREAM_TIMEOUT_MS, () => {
+    proxyReq.destroy(new Error('upstream timed out after ' + UPSTREAM_TIMEOUT_MS + 'ms'));
+  });
+
   proxyReq.on('error', err => {
     console.error(req.method + ' ' + target + ' failed: ' + err.message);
-    if (!res.headersSent) {
-      res.writeHead(502, corsHeaders);
-    }
-    res.end('Proxy error: ' + err.message);
+    fail(502, 'Proxy error: ' + err.message);
+  });
+
+  req.on('error', err => {
+    console.error('Request stream failed: ' + err.message);
+    proxyReq.destroy(err);
+  });
+
+  res.on('error', err => {
+    console.error('Response stream failed: ' + err.message);
+    proxyReq.destroy();
   });
 
   req.pipe(proxyReq);
-}).listen(PORT, () => {
+}).listen(PORT, '127.0.0.1', () => {
   console.log('CORS proxy listening on http://localhost:' + PORT);
 });

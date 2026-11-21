@@ -1,0 +1,399 @@
+--------- beginning of events
+11-14 16:04:52.750 I/am_app_pub_providers(32532): 5
+11-14 16:04:56.298 I/wm_on_create_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,performCreate]
+11-14 16:04:56.328 I/wm_on_start_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,handleStartActivity]
+11-14 16:04:56.347 I/wm_on_resume_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,RESUME_ACTIVITY]
+--------- beginning of system
+11-14 16:04:56.352 I/ActivityThread(32532): smart_link is  not supported!!!
+11-14 16:04:56.380 I/wm_on_top_resumed_gained_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,topStateChangedWhenResumed]
+--------- beginning of main
+11-14 16:05:04.104 I/chatty  (32532): uid=11568(app.houri.dev) RenderThread expire 10 lines
+11-14 16:05:05.605 I/chatty  (32532): uid=11568(app.houri.dev) DefaultDispatch expire 27 lines
+11-14 16:05:05.753 I/chatty  (32532): uid=11568(app.houri.dev) DefaultDispatch expire 27 lines
+11-14 16:05:06.864 I/chatty  (32532): uid=11568(app.houri.dev) expire 1 line
+11-14 16:05:07.368 I/chatty  (32532): uid=11568(app.houri.dev) expire 49 lines
+11-14 16:05:14.217 I/RealImageLoader(32532): 🏗 Cancelled - MangaCover(mangaId=310, sourceId=6084907896154116083, isMangaFavorite=true, ogUrl=https://images.mangabaka.dev/6/2/3/c/7/d/a/1/f9e2/4984/a185/94d21104d802, lastModified=0)
+11-14 16:05:14.218 I/RealImageLoader(32532): 💾 Successful (DISK) - MangaCover(mangaId=317, sourceId=2703831045012166262, isMangaFavorite=true, ogUrl=https://images.mangabaka.dev/4/3/9/e/5/b/a/c/441d/4e6e/861b/baa6e77d4743, lastModified=0)
+11-14 16:05:14.250 D/IMGGralloc(32532): Gralloc Register  w:166, h:261, f:0x1, usage:0x100, ui64Stamp:10319641, sSize:192512, line = 2335
+11-14 16:05:14.420 W/StandaloneCoroutine(32532): Yakuyomi model files missing/corrupt: [dbnet_detect.ncnn.param, dbnet_detect.ncnn.bin, ocr_int8.onnx, mit_aot_fixed512.ncnn.param, mit_aot_fixed512.ncnn.bin]
+11-14 16:05:14.768 I/RealImageLoader(32532): 🧠 Successful (MEMORY_CACHE) - MangaCover(mangaId=299, sourceId=2327480808438768017, isMangaFavorite=true, ogUrl=https://media.kitsu.app/manga/73780/poster_image/9814e9cc27e813b62d768a868eeb9684.jpg, lastModified=0)
+11-14 16:05:14.783 I/Choreographer(32532): Skipped 37 frames!  The application may be doing too much work on its main thread.
+11-14 16:05:14.785 I/RealImageLoader(32532): 💾 Successful (DISK) - MangaCover(mangaId=288, sourceId=8358097306709528603, isMangaFavorite=true, ogUrl=https://images.mangabaka.dev/a/d/8/6/c/e/9/6/7414/44cc/9ff1/7978a02c0f8e, lastModified=0)
+11-14 16:05:15.548 I/app.houri.dev(32532): Background young concurrent copying GC freed 351224(14MB) AllocSpace objects, 0(0B) LOS objects, 43% free, 17MB/31MB, paused 537us total 147.178ms
+11-14 16:05:16.723 D/MemoryCacheService(32532): Manga(id=345, source=4237239660432093896, favorite=true, lastUpdate=1792605409623, nextUpdate=1794981600000, fetchInterval=28, dateAdded=1792613284789, viewerFlags=0, chapterFlags=0, coverLastModified=0, url=the-journey-of-a-dark-elf-with-fading-powers, ogTitle=The Journey of a Dark Elf with Fading Powers, ogArtist=Itabashi Daisuke, ogAuthor=Itabashi Daisuke, ogThumbnailUrl=https://xz7.fstr-cdn.com/covers/the-journey-of-a-dark-elf-with-fading-powers.webp, ogDescription=What she saw after losing her powers was the true beauty of the world... Amira, once hailed as the "omnipotent caster," has fully exhausted her magic force, making her just a regular dark elf. Once, she illuminated the world with her spells; now, she converses with the wind, kindles fire, leans how to cook, and searches for new meaning to her life. Quiet happiness and small miracles have taken the place of almighty magic in her life. What will she find in this second-life fantasy as she experiences rebirth after her loss?
+11-14 16:05:16.723 D/MemoryCacheService(32532): 
+11-14 16:05:16.723 D/MemoryCacheService(32532): 
+11-14 16:05:16.723 D/MemoryCacheService(32532): 
+11-14 16:05:16.723 D/MemoryCacheService(32532): (Source: K MANGA)
+11-14 16:05:16.723 D/MemoryCacheService(32532): 
+11-14 16:05:16.723 D/MemoryCacheService(32532): **Alternative Names:**
+11-14 16:05:16.723 D/MemoryCacheService(32532): - Maryoku Kare no Dark Elf
+11-14 16:05:16.723 D/MemoryCacheService(32532): - 魔力枯れのダークエルフ
+11-14 16:05:16.723 D/MemoryCacheService(32532): 
+11-14 16:05:16.723 D/MemoryCacheService(32532): **Links:**
+11-14 16:05:16.723 D/MemoryCacheService(32532): - [AniList](https://anilist.co/manga/202539)
+11-14 16:05:16.723 D/MemoryCacheService(32532): - [MyAnimeList](https://myanimelist.net/manga/189507)
+11-14 16:05:16.723 D/MemoryCacheService(32532): - [MangaDex](https://mangadex.org/title/a76b6b97-e434-40d6-b7c5-6026d22986d6), ogGenre=[Manga, Action, Adventure, Fantasy, Magic, Monster Girls], ogStatus=1, updateStrategy=ALWAYS_UPDATE, initialized=true, lastModifiedAt=1794693330, favoriteModifiedAt=null, version=1299, notes=, memo={}, scanlatorPriority=[], blacklistedChapters=[], rereadCount=0, rereading=false, rereadStartedAt=0, scanlatorRangeRules=[], isLightNovel=false): Memory cached image's size (175, 249) is smaller than the target size (240, 360).
+11-14 16:05:16.754 D/MemoryCacheService(32532): Manga(id=345, source=4237239660432093896, favorite=true, lastUpdate=1792605409623, nextUpdate=1794981600000, fetchInterval=28, dateAdded=1792613284789, viewerFlags=0, chapterFlags=0, coverLastModified=0, url=the-journey-of-a-dark-elf-with-fading-powers, ogTitle=The Journey of a Dark Elf with Fading Powers, ogArtist=Itabashi Daisuke, ogAuthor=Itabashi Daisuke, ogThumbnailUrl=https://xz7.fstr-cdn.com/covers/the-journey-of-a-dark-elf-with-fading-powers.webp, ogDescription=What she saw after losing her powers was the true beauty of the world... Amira, once hailed as the "omnipotent caster," has fully exhausted her magic force, making her just a regular dark elf. Once, she illuminated the world with her spells; now, she converses with the wind, kindles fire, leans how to cook, and searches for new meaning to her life. Quiet happiness and small miracles have taken the place of almighty magic in her life. What will she find in this second-life fantasy as she experiences rebirth after her loss?
+11-14 16:05:16.754 D/MemoryCacheService(32532): 
+11-14 16:05:16.754 D/MemoryCacheService(32532): 
+11-14 16:05:16.754 D/MemoryCacheService(32532): 
+11-14 16:05:16.754 D/MemoryCacheService(32532): (Source: K MANGA)
+11-14 16:05:16.754 D/MemoryCacheService(32532): 
+11-14 16:05:16.754 D/MemoryCacheService(32532): **Alternative Names:**
+11-14 16:05:16.754 D/MemoryCacheService(32532): - Maryoku Kare no Dark Elf
+11-14 16:05:16.754 D/MemoryCacheService(32532): - 魔力枯れのダークエルフ
+11-14 16:05:16.754 D/MemoryCacheService(32532): 
+11-14 16:05:16.754 D/MemoryCacheService(32532): **Links:**
+11-14 16:05:16.754 D/MemoryCacheService(32532): - [AniList](https://anilist.co/manga/202539)
+11-14 16:05:16.754 D/MemoryCacheService(32532): - [MyAnimeList](https://myanimelist.net/manga/189507)
+11-14 16:05:16.754 D/MemoryCacheService(32532): - [MangaDex](https://mangadex.org/title/a76b6b97-e434-40d6-b7c5-6026d22986d6), ogGenre=[Manga, Action, Adventure, Fantasy, Magic, Monster Girls], ogStatus=1, updateStrategy=ALWAYS_UPDATE, initialized=true, lastModifiedAt=1794693330, favoriteModifiedAt=null, version=1299, notes=, memo={}, scanlatorPriority=[], blacklistedChapters=[], rereadCount=0, rereading=false, rereadStartedAt=0, scanlatorRangeRules=[], isLightNovel=false): Memory cached image's size (175, 249) is smaller than the target size (400, 573).
+11-14 16:05:17.072 I/app.houri.dev(32532): Waiting for a blocking GC ClassLinker
+11-14 16:05:17.125 I/app.houri.dev(32532): NativeAlloc concurrent copying GC freed 84140(3843KB) AllocSpace objects, 5(104KB) LOS objects, 49% free, 16MB/33MB, paused 307us total 377.173ms
+11-14 16:05:17.125 I/app.houri.dev(32532): WaitForGcToComplete blocked ClassLinker on HeapTrim for 53.269ms
+11-14 16:05:17.855 I/Choreographer(32532): Skipped 202 frames!  The application may be doing too much work on its main thread.
+11-14 16:05:17.970 I/OpenGLRenderer(32532): Davey! duration=3750ms; Flags=0, IntendedVsync=900768642717250, Vsync=900769203304250, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900769207560370, AnimationStart=900769207564870, PerformTraversalsStart=900770088290754, DrawStart=900770088932869, SyncQueued=900772272276637, SyncStart=900772273070099, IssueDrawCommandsStart=900772276877329, SwapBuffers=900772392665483, FrameCompleted=900772394286291, DequeueBufferDuration=777231, QueueBufferDuration=628038, GpuCompleted=900762398368836, 
+11-14 16:05:18.065 D/IMGGralloc(32532): Gralloc Register  w:253, h:360, f:0x1, usage:0x100, ui64Stamp:10319807, sSize:376832, line = 2335
+11-14 16:05:18.203 I/RealImageLoader(32532): 💾 Successful (DISK) - Manga(id=345, source=4237239660432093896, favorite=true, lastUpdate=1792605409623, nextUpdate=1794981600000, fetchInterval=28, dateAdded=1792613284789, viewerFlags=0, chapterFlags=0, coverLastModified=0, url=the-journey-of-a-dark-elf-with-fading-powers, ogTitle=The Journey of a Dark Elf with Fading Powers, ogArtist=Itabashi Daisuke, ogAuthor=Itabashi Daisuke, ogThumbnailUrl=https://xz7.fstr-cdn.com/covers/the-journey-of-a-dark-elf-with-fading-powers.webp, ogDescription=What she saw after losing her powers was the true beauty of the world... Amira, once hailed as the "omnipotent caster," has fully exhausted her magic force, making her just a regular dark elf. Once, she illuminated the world with her spells; now, she converses with the wind, kindles fire, leans how to cook, and searches for new meaning to her life. Quiet happiness and small miracles have taken the place of almighty magic in her life. What will she find in this second-life fantasy as she experiences rebirth after her loss?
+11-14 16:05:18.203 I/RealImageLoader(32532): 
+11-14 16:05:18.203 I/RealImageLoader(32532): 
+11-14 16:05:18.203 I/RealImageLoader(32532): 
+11-14 16:05:18.203 I/RealImageLoader(32532): (Source: K MANGA)
+11-14 16:05:18.203 I/RealImageLoader(32532): 
+11-14 16:05:18.203 I/RealImageLoader(32532): **Alternative Names:**
+11-14 16:05:18.203 I/RealImageLoader(32532): - Maryoku Kare no Dark Elf
+11-14 16:05:18.203 I/RealImageLoader(32532): - 魔力枯れのダークエルフ
+11-14 16:05:18.203 I/RealImageLoader(32532): 
+11-14 16:05:18.203 I/RealImageLoader(32532): **Links:**
+11-14 16:05:18.203 I/RealImageLoader(32532): - [AniList](https://anilist.co/manga/202539)
+11-14 16:05:18.203 I/RealImageLoader(32532): - [MyAnimeList](https://myanimelist.net/manga/189507)
+11-14 16:05:18.203 I/RealImageLoader(32532): - [MangaDex](https://mangadex.org/title/a76b6b97-e434-40d6-b7c5-6026d22986d6), ogGenre=[Manga, Action, Adventure, Fantasy, Magic, Monster Girls], ogStatus=1, updateStrategy=ALWAYS_UPDATE, initialized=true, lastModifiedAt=1794693330, favoriteModifiedAt=null, version=1299, notes=, memo={}, scanlatorPriority=[], blacklistedChapters=[], rereadCount=0, rereading=false, rereadStartedAt=0, scanlatorRangeRules=[], isLightNovel=false)
+11-14 16:05:18.209 I/OpenGLRenderer(32532): Davey! duration=3413ms; Flags=0, IntendedVsync=900769219192585, Vsync=900772279694585, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900772280529329, AnimationStart=900772280534791, PerformTraversalsStart=900772571606406, DrawStart=900772572298944, SyncQueued=900772618010675, SyncStart=900772619526021, IssueDrawCommandsStart=900772621445214, SwapBuffers=900772632479291, FrameCompleted=900772633904252, DequeueBufferDuration=959615, QueueBufferDuration=708154, GpuCompleted=900762408163336, 
+11-14 16:05:18.234 D/IMGGralloc(32532): Gralloc Register  w:403, h:573, f:0x1, usage:0x100, ui64Stamp:10319811, sSize:958464, line = 2335
+11-14 16:05:18.334 I/RealImageLoader(32532): 💾 Successful (DISK) - Manga(id=345, source=4237239660432093896, favorite=true, lastUpdate=1792605409623, nextUpdate=1794981600000, fetchInterval=28, dateAdded=1792613284789, viewerFlags=0, chapterFlags=0, coverLastModified=0, url=the-journey-of-a-dark-elf-with-fading-powers, ogTitle=The Journey of a Dark Elf with Fading Powers, ogArtist=Itabashi Daisuke, ogAuthor=Itabashi Daisuke, ogThumbnailUrl=https://xz7.fstr-cdn.com/covers/the-journey-of-a-dark-elf-with-fading-powers.webp, ogDescription=What she saw after losing her powers was the true beauty of the world... Amira, once hailed as the "omnipotent caster," has fully exhausted her magic force, making her just a regular dark elf. Once, she illuminated the world with her spells; now, she converses with the wind, kindles fire, leans how to cook, and searches for new meaning to her life. Quiet happiness and small miracles have taken the place of almighty magic in her life. What will she find in this second-life fantasy as she experiences rebirth after her loss?
+11-14 16:05:18.334 I/RealImageLoader(32532): 
+11-14 16:05:18.334 I/RealImageLoader(32532): 
+11-14 16:05:18.334 I/RealImageLoader(32532): 
+11-14 16:05:18.334 I/RealImageLoader(32532): (Source: K MANGA)
+11-14 16:05:18.334 I/RealImageLoader(32532): 
+11-14 16:05:18.334 I/RealImageLoader(32532): **Alternative Names:**
+11-14 16:05:18.334 I/RealImageLoader(32532): - Maryoku Kare no Dark Elf
+11-14 16:05:18.334 I/RealImageLoader(32532): - 魔力枯れのダークエルフ
+11-14 16:05:18.334 I/RealImageLoader(32532): 
+11-14 16:05:18.334 I/RealImageLoader(32532): **Links:**
+11-14 16:05:18.334 I/RealImageLoader(32532): - [AniList](https://anilist.co/manga/202539)
+11-14 16:05:18.334 I/RealImageLoader(32532): - [MyAnimeList](https://myanimelist.net/manga/189507)
+11-14 16:05:18.334 I/RealImageLoader(32532): - [MangaDex](https://mangadex.org/title/a76b6b97-e434-40d6-b7c5-6026d22986d6), ogGenre=[Manga, Action, Adventure, Fantasy, Magic, Monster Girls], ogStatus=1, updateStrategy=ALWAYS_UPDATE, initialized=true, lastModifiedAt=1794693330, favoriteModifiedAt=null, version=1299, notes=, memo={}, scanlatorPriority=[], blacklistedChapters=[], rereadCount=0, rereading=false, rereadStartedAt=0, scanlatorRangeRules=[], isLightNovel=false)
+11-14 16:05:18.675 I/wm_on_top_resumed_lost_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,topStateChangedWhenResumed]
+11-14 16:05:18.691 I/wm_on_paused_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,performPause]
+11-14 16:05:19.109 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10319467 line = 2441
+11-14 16:05:19.109 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10319437 line = 2441
+11-14 16:05:19.109 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10319328 line = 2441
+11-14 16:05:19.160 I/wm_on_stop_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,STOP_ACTIVITY_ITEM]
+11-14 16:05:20.762 D/BufferPoolAccessor2.0(32532): bufferpool2 0x97a1da58 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 2/4 (fetch/transfer)
+11-14 16:05:20.764 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x97a1da58 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 4, 50% unfetched
+11-14 16:05:20.764 D/BufferPoolAccessor2.0(32532): bufferpool2 0x97a1dcd8 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 2/4 (fetch/transfer)
+11-14 16:05:20.764 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x97a1dcd8 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 4, 50% unfetched
+11-14 16:05:20.765 D/BufferPoolAccessor2.0(32532): bufferpool2 0x7d32b298 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 2/4 (fetch/transfer)
+11-14 16:05:20.765 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x7d32b298 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 4, 50% unfetched
+11-14 16:05:20.765 D/BufferPoolAccessor2.0(32532): bufferpool2 0x7d32bc98 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 2/4 (fetch/transfer)
+11-14 16:05:20.765 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x7d32bc98 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 4, 50% unfetched
+11-14 16:05:20.765 D/BufferPoolAccessor2.0(32532): bufferpool2 0x7d32ec18 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 3/6 (fetch/transfer)
+11-14 16:05:20.766 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x7d32ec18 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 6, 50% unfetched
+11-14 16:05:20.766 D/BufferPoolAccessor2.0(32532): bufferpool2 0x7d32f758 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 4/8 (fetch/transfer)
+11-14 16:05:20.766 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x7d32f758 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 8, 50% unfetched
+11-14 16:05:20.766 D/BufferPoolAccessor2.0(32532): bufferpool2 0x7d3326d8 : 0(0 size) total buffers - 0(0 size) used buffers - 0/5 (recycle/alloc) - 4/8 (fetch/transfer)
+11-14 16:05:20.766 D/BufferPoolAccessor2.0(32532): Destruction - bufferpool2 0x7d3326d8 cached: 0/0M, 0/0% in use; allocs: 5, 0% recycled; transfers: 8, 50% unfetched
+11-14 16:05:24.597 I/wm_on_restart_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,performRestartActivity]
+11-14 16:05:24.598 I/app.houri.dev(32532): CollectorTransition concurrent copying GC freed 121210(5029KB) AllocSpace objects, 2(32KB) LOS objects, 49% free, 13MB/27MB, paused 196us total 438.284ms
+11-14 16:05:24.616 I/wm_on_start_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,handleStartActivity]
+11-14 16:05:24.628 I/wm_on_resume_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,RESUME_ACTIVITY]
+11-14 16:05:24.632 I/wm_on_top_resumed_gained_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,topWhenResuming]
+11-14 16:05:24.632 I/ActivityThread(32532): smart_link is  not supported!!!
+11-14 16:05:24.638 D/IMGGralloc(32532): Gralloc Free  w:175, h:249, f:0x1, usage:0x100, ui64Stamp:10319602 line = 2441
+11-14 16:05:24.783 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320063, sSize:4096000, line = 2335
+11-14 16:05:24.859 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320176, sSize:4096000, line = 2335
+11-14 16:05:25.718 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320187, sSize:4096000, line = 2335
+11-14 16:05:25.876 I/wm_on_top_resumed_lost_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,topStateChangedWhenResumed]
+11-14 16:05:25.879 I/wm_on_paused_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,performPause]
+11-14 16:05:25.919 D/BufferPoolAccessor2.0(32532): evictor expired: 7, evicted: 0
+11-14 16:05:26.125 D/UndispatchedCoroutine(32532): Loading pages for Ch. 4 — Maryoku Kare no Dark Elf Chapter 4
+11-14 16:05:26.125 D/UndispatchedCoroutine(32532): Loading pages for Ch. 4 — Maryoku Kare no Dark Elf Chapter 4
+11-14 16:05:26.129 D/ReaderActivity(32532): ReaderActivity.updateViewer: DEFERRED - no page loader yet (chapter=none, viewerChapters=false)
+11-14 16:05:26.129 D/ReaderActivity(32532): ReaderActivity.updateViewer: DEFERRED - no page loader yet (chapter=none, viewerChapters=false)
+11-14 16:05:26.133 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 4 — Maryoku Kare no Dark Elf Chapter 4' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8675006) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:26.133 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 4 — Maryoku Kare no Dark Elf Chapter 4' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8675006) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:26.134 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:26.134 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:26.135 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:26.137 I/wm_on_create_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,performCreate]
+11-14 16:05:26.155 I/wm_on_start_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,handleStartActivity]
+11-14 16:05:26.158 I/wm_on_resume_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,RESUME_ACTIVITY]
+11-14 16:05:26.160 I/ActivityThread(32532): smart_link is  not supported!!!
+11-14 16:05:26.178 I/wm_on_top_resumed_gained_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,topStateChangedWhenResumed]
+11-14 16:05:26.135 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:26.230 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:26.230 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:26.230 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:26.230 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:26.995 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320204, sSize:4096000, line = 2335
+11-14 16:05:27.002 I/OpenGLRenderer(32532): Davey! duration=1095ms; Flags=1, IntendedVsync=900780324309872, Vsync=900780597027872, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900780603140016, AnimationStart=900780603145477, PerformTraversalsStart=900780603796323, DrawStart=900781408117015, SyncQueued=900781413053977, SyncStart=900781419854438, IssueDrawCommandsStart=900781420098246, SwapBuffers=900781425862630, FrameCompleted=900781426680977, DequeueBufferDuration=0, QueueBufferDuration=570923, GpuCompleted=31525459381560246, 
+11-14 16:05:27.033 I/Choreographer(32532): Skipped 54 frames!  The application may be doing too much work on its main thread.
+11-14 16:05:27.063 D/ReaderActivity(32532): isTextChapter: chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 loader=HttpPageLoader isText=false pages=51
+11-14 16:05:27.064 D/ReaderActivity(32532): isTextChapter: chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 loader=HttpPageLoader isText=false pages=51
+11-14 16:05:27.065 I/OpenGLRenderer(32532): Davey! duration=860ms; Flags=0, IntendedVsync=900780627724123, Vsync=900781445878123, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900781457828938, AnimationStart=900781457833900, PerformTraversalsStart=900781474134938, DrawStart=900781475123746, SyncQueued=900781479261169, SyncStart=900781480274284, IssueDrawCommandsStart=900781480713130, SwapBuffers=900781487000515, FrameCompleted=900781489502477, DequeueBufferDuration=0, QueueBufferDuration=926347, GpuCompleted=900762930820298, 
+11-14 16:05:27.066 D/ViewerRegistry(32532): ViewerRegistry: mode=LEFT_TO_RIGHT isTextChapter=false loader=HttpPageLoader registered=[LegacyProvider, NovelViewerProvider, WebGpuProvider]
+11-14 16:05:27.066 D/ViewerRegistry(32532): ViewerRegistry: mode=LEFT_TO_RIGHT isTextChapter=false loader=HttpPageLoader registered=[LegacyProvider, NovelViewerProvider, WebGpuProvider]
+11-14 16:05:27.068 D/NovelViewerProvider(32532): NovelViewerProvider: DECLINED - chapter loader is HttpPageLoader, not a TextPageLoader
+11-14 16:05:27.068 D/NovelViewerProvider(32532): NovelViewerProvider: DECLINED - chapter loader is HttpPageLoader, not a TextPageLoader
+11-14 16:05:27.069 D/ViewerRegistry(32532): ViewerRegistry:   NovelViewerProvider(order=-10) -> declined
+11-14 16:05:27.069 D/ViewerRegistry(32532): ViewerRegistry:   NovelViewerProvider(order=-10) -> declined
+11-14 16:05:27.302 D/vulkan  (32532): searching for layers in '/data/app/~~LTgYSqWLTMcpuBCf1yaC8Q==/app.houri.dev-ms3o8VP-NleQyWBkogAp4Q==/lib/arm'
+11-14 16:05:27.304 D/vulkan  (32532): searching for layers in '/data/app/~~LTgYSqWLTMcpuBCf1yaC8Q==/app.houri.dev-ms3o8VP-NleQyWBkogAp4Q==/base.apk!/lib/armeabi-v7a'
+11-14 16:05:27.369 W/Dawn    (32532): Warning: maxDynamicUniformBuffersPerPipelineLayout artificially reduced from 72 to 16 to fit dynamic offset allocation limit.
+11-14 16:05:27.414 I/WebGpuRenderer(32532): maxTextureDimension2D adapter=4096 device=8192 core=true
+11-14 16:05:27.577 D/WebGpuViewer(32532): Starting 1 decode worker(s)
+11-14 16:05:27.578 D/WebGpuViewer(32532): Starting 1 decode worker(s)
+11-14 16:05:27.601 I/WebGpuViewer(32532): MemBudget [open -> pressure=TIGHT headroom=793MB pages=64MB tiles=16MB maxPage=24MB px<=4MP] pressure=TIGHT headroom=793MB pages=64MB tiles=16MB maxPage=24MB px<=4MP
+11-14 16:05:27.601 I/WebGpuViewer(32532): MemBudget [open -> pressure=TIGHT headroom=793MB pages=64MB tiles=16MB maxPage=24MB px<=4MP] pressure=TIGHT headroom=793MB pages=64MB tiles=16MB maxPage=24MB px<=4MP
+11-14 16:05:27.613 D/ViewerRegistry(32532): ViewerRegistry:   WebGpuProvider(order=0) -> WebGpuViewer
+11-14 16:05:27.613 D/ViewerRegistry(32532): ViewerRegistry:   WebGpuProvider(order=0) -> WebGpuViewer
+11-14 16:05:27.613 D/ViewerRegistry(32532): ViewerRegistry: viewer chosen = WebGpuViewer for mode=LEFT_TO_RIGHT (isText=false)
+11-14 16:05:27.614 D/ViewerRegistry(32532): ViewerRegistry: viewer chosen = WebGpuViewer for mode=LEFT_TO_RIGHT (isText=false)
+11-14 16:05:27.614 D/ReaderActivity(32532): isTextChapter: chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 loader=HttpPageLoader isText=false pages=51
+11-14 16:05:27.614 D/ReaderActivity(32532): isTextChapter: chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 loader=HttpPageLoader isText=false pages=51
+11-14 16:05:27.615 D/ReaderActivity(32532): ReaderActivity.updateViewer: built WebGpuViewer mode=1 chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 source=345 (text=false)
+11-14 16:05:27.615 D/ReaderActivity(32532): ReaderActivity.updateViewer: built WebGpuViewer mode=1 chapter=the-journey-of-a-dark-elf-with-fading-powers/8675006 source=345 (text=false)
+11-14 16:05:27.732 D/CompatibilityChangeReporter(32532): Compat change id reported: 147798919; UID 11568; state: ENABLED
+11-14 16:05:27.737 V/Toast   (32532): Toast SHOW: android.widget.Toast@e825ba3 view = null pkg: app.houri.dev TextToast? true caller: eu.kanade.tachiyomi.util.system.ToastExtensionsKt.toast:38 eu.kanade.tachiyomi.util.system.ToastExtensionsKt.toast:19 eu.kanade.tachiyomi.util.system.ToastExtensionsKt.toast$default:14 eu.kanade.tachiyomi.ui.reader.ReaderActivity.showReadingModeToast:1605 eu.kanade.tachiyomi.ui.reader.ReaderActivity.updateViewer:1554 
+11-14 16:05:28.266 D/WebGpuViewer(32532): Queued ch=22226/i=0 priority=1000 depth=1
+11-14 16:05:28.266 D/WebGpuViewer(32532): Queued ch=22226/i=0 priority=1000 depth=1
+11-14 16:05:28.269 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=0@dequeued
+11-14 16:05:28.269 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=0@dequeued
+11-14 16:05:28.284 D/WebGpuViewer(32532): Queued ch=22226/i=1 priority=749 depth=1
+11-14 16:05:28.285 D/WebGpuViewer(32532): Queued ch=22226/i=1 priority=749 depth=1
+11-14 16:05:28.289 D/ReaderViewModel(32532): Preloading the-journey-of-a-dark-elf-with-fading-powers/8675007
+11-14 16:05:28.289 D/ReaderViewModel(32532): Preloading the-journey-of-a-dark-elf-with-fading-powers/8675007
+11-14 16:05:28.290 D/DispatchedCoroutine(32532): Loading pages for Ch. 3 — Maryoku Kare no Dark Elf Chapter 3
+11-14 16:05:28.291 D/DispatchedCoroutine(32532): Loading pages for Ch. 3 — Maryoku Kare no Dark Elf Chapter 3
+11-14 16:05:28.291 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 3 — Maryoku Kare no Dark Elf Chapter 3' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8675007) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:28.292 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 3 — Maryoku Kare no Dark Elf Chapter 3' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8675007) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:28.293 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:28.293 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:28.294 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:28.294 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:28.295 D/ReaderViewModel(32532): Preloading the-journey-of-a-dark-elf-with-fading-powers/8665538
+11-14 16:05:28.295 D/ReaderViewModel(32532): Preloading the-journey-of-a-dark-elf-with-fading-powers/8665538
+11-14 16:05:28.296 D/DispatchedCoroutine(32532): Loading pages for Ch. 5 — Maryoku Kare no Dark Elf Chapter 5
+11-14 16:05:28.296 D/DispatchedCoroutine(32532): Loading pages for Ch. 5 — Maryoku Kare no Dark Elf Chapter 5
+11-14 16:05:28.297 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 5 — Maryoku Kare no Dark Elf Chapter 5' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8665538) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:28.297 D/PageLoaderRegistry(32532): Reader: choosing a page loader for 'Ch. 5 — Maryoku Kare no Dark Elf Chapter 5' (chapter url=the-journey-of-a-dark-elf-with-fading-powers/8665538) from source=Generated#4237239660432093896 lang=en isTextSource=false
+11-14 16:05:28.298 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:28.298 D/PageLoaderRegistry(32532): Reader:   TextEntryPageLoaderProvider(order=-20) -> declined
+11-14 16:05:28.298 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:28.298 D/PageLoaderRegistry(32532): Reader:   TextPageLoaderProvider(order=-10) -> declined
+11-14 16:05:28.340 W/ncnn    (32532): [0 PowerVR Rogue GE8322]  queueC=0[2]  queueT=0[2]  rebar=1  r-score=7
+11-14 16:05:28.340 W/ncnn    (32532): [0 PowerVR Rogue GE8322]  fp16-p/s/u/a=1/1/1/1  int8-p/s/u/a=1/1/1/1  bf16-p/s=1/0
+11-14 16:05:28.340 W/ncnn    (32532): [0 PowerVR Rogue GE8322]  subgroup=1(1~1)  ops=1/1/1/1/1/1/0/0/0/0
+11-14 16:05:28.340 W/ncnn    (32532): [0 PowerVR Rogue GE8322]  fp16-cm=0  int8-cm=0  bf16-cm=0  fp8-cm=0
+11-14 16:05:28.343 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 loading total=74ms bytes=-1 fmt=? dims=? transformed=?
+11-14 16:05:28.343 I/GraphicsJNI(32532): GraphicsJNI::isHardwareConfig qemu gles is 1.
+11-14 16:05:28.343 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 loading total=74ms bytes=-1 fmt=? dims=? transformed=?
+11-14 16:05:28.344 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=1@dequeued
+11-14 16:05:28.344 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=1@dequeued
+11-14 16:05:28.346 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 loading total=2ms bytes=-1 fmt=? dims=? transformed=?
+11-14 16:05:28.346 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 loading total=2ms bytes=-1 fmt=? dims=? transformed=?
+11-14 16:05:28.427 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:28.427 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:28.428 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:28.428 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:28.443 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:28.444 D/PageLoaderRegistry(32532): Reader:   DefaultPageLoaderProvider(order=100) -> HttpPageLoader
+11-14 16:05:28.445 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:28.445 D/PageLoaderRegistry(32532): Reader: loader chosen = HttpPageLoader for source#4237239660432093896 (Manga.uno)
+11-14 16:05:28.453 D/WebGpuViewer(32532): Evicted ch=22227/i=35 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.453 D/WebGpuViewer(32532): Evicted ch=22227/i=35 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.463 D/WebGpuViewer(32532): Evicted ch=22227/i=36 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.463 D/WebGpuViewer(32532): Evicted ch=22227/i=36 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.469 D/WebGpuViewer(32532): Evicted ch=22227/i=37 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.469 D/WebGpuViewer(32532): Evicted ch=22227/i=37 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.471 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.471 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.472 D/WebGpuViewer(32532): Page list changed [1, 0, 0] -> [1, 1, 0] - reconciling
+11-14 16:05:28.472 D/WebGpuViewer(32532): Page list changed [1, 0, 0] -> [1, 1, 0] - reconciling
+11-14 16:05:28.474 D/WebGpuViewer(32532): Evicted ch=22225/i=0 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.474 D/WebGpuViewer(32532): Evicted ch=22225/i=0 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.476 D/WebGpuViewer(32532): Evicted ch=22225/i=1 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.476 D/WebGpuViewer(32532): Evicted ch=22225/i=1 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.479 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=1@dequeued
+11-14 16:05:28.479 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=1@dequeued
+11-14 16:05:28.480 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=2ms
+11-14 16:05:28.481 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=2ms
+11-14 16:05:28.482 D/WebGpuViewer(32532): Evicted ch=22225/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.483 D/WebGpuViewer(32532): Evicted ch=22225/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.486 D/WebGpuViewer(32532): Evicted ch=22225/i=3 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.486 D/WebGpuViewer(32532): Evicted ch=22225/i=3 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:28.488 D/WebGpuViewer(32532): Page list changed [1, 1, 0] -> [1, 1, 1] - reconciling
+11-14 16:05:28.488 D/WebGpuViewer(32532): Page list changed [1, 1, 0] -> [1, 1, 1] - reconciling
+11-14 16:05:28.492 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=-1 fmt=? dims=? transformed=? prev=stream held=11ms cap=24MB
+11-14 16:05:28.492 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=-1 fmt=? dims=? transformed=? prev=stream held=11ms cap=24MB
+11-14 16:05:28.499 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=readBytes held=8ms bytes=330888
+11-14 16:05:28.499 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=readBytes held=8ms bytes=330888
+11-14 16:05:28.507 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=validate held=7ms format=webp dims=nullxnull
+11-14 16:05:28.507 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=validate held=7ms format=webp dims=nullxnull
+11-14 16:05:28.508 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=upscale-check held=1ms
+11-14 16:05:28.508 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=? prev=upscale-check held=1ms
+11-14 16:05:28.579 I/Choreographer(32532): Skipped 100 frames!  The application may be doing too much work on its main thread.
+11-14 16:05:28.633 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=false prev=upscale held=125ms
+11-14 16:05:28.633 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=false prev=upscale held=125ms
+11-14 16:05:28.715 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=false prev=metadata held=82ms bytes=330888
+11-14 16:05:28.716 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=? dims=? transformed=false prev=metadata held=82ms bytes=330888
+11-14 16:05:28.872 D/IMGGralloc(32532): GBuffer--------------(*format)=4
+11-14 16:05:28.872 D/IMGGralloc(32532): GBuffer--------------(*format)=22
+11-14 16:05:28.872 D/IMGGralloc(32532): GBuffer--------------(*format)=43
+11-14 16:05:28.873 D/IMGGralloc(32532): GBuffer--------------(*format)=4
+11-14 16:05:28.873 D/IMGGralloc(32532): GBuffer--------------(*format)=22
+11-14 16:05:28.873 D/IMGGralloc(32532): GBuffer--------------(*format)=43
+11-14 16:05:28.874 I/Hdr     (32532): HDR surface support = true
+11-14 16:05:28.878 D/IMGGralloc(32532): GBuffer--------------(*format)=4
+11-14 16:05:28.878 D/IMGGralloc(32532): GBuffer--------------(*format)=22
+11-14 16:05:28.878 D/IMGGralloc(32532): GBuffer--------------(*format)=43
+11-14 16:05:28.879 D/IMGGralloc(32532): GBuffer--------------(*format)=4
+11-14 16:05:28.879 D/IMGGralloc(32532): GBuffer--------------(*format)=22
+11-14 16:05:28.879 D/IMGGralloc(32532): GBuffer--------------(*format)=43
+11-14 16:05:28.886 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0x40000b00, ui64Stamp:10320307, sSize:4096000, line = 2335
+11-14 16:05:28.891 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0x40000b00, ui64Stamp:10320311, sSize:4096000, line = 2335
+11-14 16:05:28.896 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0x40000b00, ui64Stamp:10320315, sSize:4096000, line = 2335
+11-14 16:05:28.911 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=? transformed=false prev=decoderInit held=196ms frames=1 fmt=webp
+11-14 16:05:28.911 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=? transformed=false prev=decoderInit held=196ms frames=1 fmt=webp
+11-14 16:05:28.920 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320319, sSize:4096000, line = 2335
+11-14 16:05:28.929 I/OpenGLRenderer(32532): Davey! duration=1865ms; Flags=1, IntendedVsync=900781477344595, Vsync=900782992444595, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900783003998014, AnimationStart=900783004039899, PerformTraversalsStart=900783126568360, DrawStart=900783193303437, SyncQueued=900783334498398, SyncStart=900783345780052, IssueDrawCommandsStart=900783346091783, SwapBuffers=900783352657706, FrameCompleted=900783353811629, DequeueBufferDuration=0, QueueBufferDuration=742385, GpuCompleted=4936508142680473600, 
+11-14 16:05:29.004 I/OpenGLRenderer(32532): Davey! duration=1950ms; Flags=1, IntendedVsync=900781477344595, Vsync=900782992444595, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=900783003998014, AnimationStart=900783004039899, PerformTraversalsStart=900783126568360, DrawStart=900783368550629, SyncQueued=900783417870975, SyncStart=900783418890283, IssueDrawCommandsStart=900783419328514, SwapBuffers=900783427406283, FrameCompleted=900783428610206, DequeueBufferDuration=0, QueueBufferDuration=704231, GpuCompleted=900766598260910, 
+11-14 16:05:29.016 I/wm_on_stop_called(32532): [117747415,eu.kanade.tachiyomi.ui.main.MainActivity,STOP_ACTIVITY_ITEM]
+11-14 16:05:29.019 I/app.houri.dev(32532): Background young concurrent copying GC freed 243672(10MB) AllocSpace objects, 13(624KB) LOS objects, 24% free, 20MB/27MB, paused 206us total 105.853ms
+11-14 16:05:29.133 I/Choreographer(32532): Skipped 30 frames!  The application may be doing too much work on its main thread.
+11-14 16:05:29.158 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320187 line = 2441
+11-14 16:05:29.159 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320176 line = 2441
+11-14 16:05:29.159 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320063 line = 2441
+11-14 16:05:29.182 D/IMGGralloc(32532): Gralloc Register  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320324, sSize:4096000, line = 2335
+11-14 16:05:29.512 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=601ms
+11-14 16:05:29.512 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=601ms
+11-14 16:05:29.513 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=prepare held=1ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:29.513 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=prepare held=1ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:30.222 W/WebGpuRenderer(32532): stale device-lost callback for a retired device (reason=1: vkQueueSubmit failed with VK_ERROR_OUT_OF_DEVICE_MEMORY
+11-14 16:05:30.222 W/WebGpuRenderer(32532):  - While handling unexpected error type Internal when allowed errors are Validation.
+11-14 16:05:30.222 W/WebGpuRenderer(32532):     at CheckVkSuccessImpl (/home/w/dawn/src/dawn/native/vulkan/VulkanError.cpp:106)
+11-14 16:05:30.222 W/WebGpuRenderer(32532): )
+11-14 16:05:30.236 I/Renderer(32532): Create tile 0 0 960 1376 (alloc 960x1376) 0 0
+11-14 16:05:30.242 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.243 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.245 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=733ms
+11-14 16:05:30.245 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 bytes=330888 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=733ms
+11-14 16:05:30.247 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 decoded total=1768ms bytes=330888 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:30.247 D/DecodeTrace(32532): DecodeTrace ch=22226/i=1 decoded total=1768ms bytes=330888 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:30.251 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=0@dequeued
+11-14 16:05:30.251 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=0@dequeued
+11-14 16:05:30.252 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=1ms
+11-14 16:05:30.252 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=1ms
+11-14 16:05:30.254 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=-1 fmt=? dims=? transformed=? prev=stream held=2ms cap=24MB
+11-14 16:05:30.254 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=-1 fmt=? dims=? transformed=? prev=stream held=2ms cap=24MB
+11-14 16:05:30.258 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.259 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.265 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=readBytes held=11ms bytes=495216
+11-14 16:05:30.265 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=readBytes held=11ms bytes=495216
+11-14 16:05:30.266 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=validate held=2ms format=webp dims=nullxnull
+11-14 16:05:30.266 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=validate held=2ms format=webp dims=nullxnull
+11-14 16:05:30.267 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=upscale-check held=0ms
+11-14 16:05:30.267 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=? prev=upscale-check held=0ms
+11-14 16:05:30.269 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=false prev=upscale held=2ms
+11-14 16:05:30.269 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=false prev=upscale held=2ms
+11-14 16:05:30.275 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=false prev=metadata held=7ms bytes=495216
+11-14 16:05:30.275 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=? dims=? transformed=false prev=metadata held=7ms bytes=495216
+11-14 16:05:30.281 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=? transformed=false prev=decoderInit held=5ms frames=1 fmt=webp
+11-14 16:05:30.281 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=? transformed=false prev=decoderInit held=5ms frames=1 fmt=webp
+11-14 16:05:30.288 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.288 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.317 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.318 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.355 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.545 I/chatty  (32532): uid=11568(app.houri.dev) identical 12 lines
+11-14 16:05:30.545 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.591 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.652 I/chatty  (32532): uid=11568(app.houri.dev) identical 4 lines
+11-14 16:05:30.652 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.658 I/app.houri.dev(32532): Background concurrent copying GC freed 15706(1081KB) AllocSpace objects, 5(7252KB) LOS objects, 50% free, 22MB/45MB, paused 160us total 302.997ms
+11-14 16:05:30.681 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.728 I/chatty  (32532): uid=11568(app.houri.dev) identical 2 lines
+11-14 16:05:30.728 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.758 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.819 I/chatty  (32532): uid=11568(app.houri.dev) identical 4 lines
+11-14 16:05:30.819 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.835 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=554ms
+11-14 16:05:30.835 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=554ms
+11-14 16:05:30.836 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=prepare held=2ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:30.836 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=prepare held=2ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:30.838 I/Renderer(32532): Create tile 0 0 960 1376 (alloc 960x1376) 0 0
+11-14 16:05:30.842 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=5ms
+11-14 16:05:30.842 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 bytes=495216 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=5ms
+11-14 16:05:30.844 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 decoded total=593ms bytes=495216 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:30.844 D/DecodeTrace(32532): DecodeTrace ch=22226/i=0 decoded total=593ms bytes=495216 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:30.848 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.939 I/chatty  (32532): uid=11568(app.houri.dev) identical 8 lines
+11-14 16:05:30.939 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.954 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.954 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.969 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.969 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:30.984 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:31.106 I/chatty  (32532): uid=11568(app.houri.dev) identical 16 lines
+11-14 16:05:31.107 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:31.116 D/TileRenderer(32532): Pre-warming next page tiles 7d7fdc3
+11-14 16:05:31.120 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:31.121 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:33.063 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:33.063 D/WebGpuViewer(32532): Evicted ch=22227/i=38 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:33.479 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:33.563 I/chatty  (32532): uid=11568(app.houri.dev) identical 6 lines
+11-14 16:05:33.563 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:35.066 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:35.066 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:35.925 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:35.925 D/WebGpuViewer(32532): Evicted ch=22226/i=2 state=IDLE decoded=false drawn=false cache=2
+11-14 16:05:35.974 D/WebGpuViewer(32532): Evicted ch=22226/i=0 state=IDLE decoded=true drawn=false cache=2
+11-14 16:05:35.974 D/WebGpuViewer(32532): Evicted ch=22226/i=0 state=IDLE decoded=true drawn=false cache=2
+11-14 16:05:35.976 D/WebGpuViewer(32532): Queued ch=22226/i=3 priority=800 depth=1
+11-14 16:05:35.976 D/WebGpuViewer(32532): Queued ch=22226/i=3 priority=800 depth=1
+11-14 16:05:35.977 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=3@dequeued
+11-14 16:05:35.977 D/WebGpuViewer(32532): DecodeQueue dequeue depth=0 active=ch=22226/i=3@dequeued
+11-14 16:05:35.978 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=1ms
+11-14 16:05:35.978 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=-1 fmt=? dims=? transformed=? prev=dequeued held=1ms
+11-14 16:05:35.980 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=-1 fmt=? dims=? transformed=? prev=stream held=3ms cap=24MB
+11-14 16:05:35.980 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=-1 fmt=? dims=? transformed=? prev=stream held=3ms cap=24MB
+11-14 16:05:35.985 D/TileRenderer(32532): grid PAGE_DESTROY 80cf9d3 dropped
+11-14 16:05:35.988 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=readBytes held=7ms bytes=487720
+11-14 16:05:35.988 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=readBytes held=7ms bytes=487720
+11-14 16:05:35.989 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=validate held=1ms format=webp dims=nullxnull
+11-14 16:05:35.989 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=validate held=1ms format=webp dims=nullxnull
+11-14 16:05:35.989 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=upscale-check held=1ms
+11-14 16:05:35.990 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=? prev=upscale-check held=1ms
+11-14 16:05:35.992 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=false prev=upscale held=2ms
+11-14 16:05:35.992 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=false prev=upscale held=2ms
+11-14 16:05:35.997 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=false prev=metadata held=6ms bytes=487720
+11-14 16:05:35.998 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=? dims=? transformed=false prev=metadata held=6ms bytes=487720
+11-14 16:05:36.001 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=? transformed=false prev=decoderInit held=3ms frames=1 fmt=webp
+11-14 16:05:36.001 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=? transformed=false prev=decoderInit held=3ms frames=1 fmt=webp
+11-14 16:05:36.502 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=502ms
+11-14 16:05:36.503 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=decodeNext held=502ms
+11-14 16:05:36.504 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=prepare held=1ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:36.504 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=prepare held=1ms dims=960x1376 mipmaps=true hdr=false
+11-14 16:05:36.508 I/Renderer(32532): Create tile 0 0 960 1376 (alloc 960x1376) 0 0
+11-14 16:05:36.514 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=10ms
+11-14 16:05:36.514 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 bytes=487720 fmt=webp dims=960x1376 transformed=false prev=gpuUpload held=10ms
+11-14 16:05:36.515 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 decoded total=538ms bytes=487720 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:36.515 D/DecodeTrace(32532): DecodeTrace ch=22226/i=3 decoded total=538ms bytes=487720 fmt=webp dims=960x1376 transformed=false
+11-14 16:05:37.591 I/wm_on_top_resumed_lost_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,topStateChangedWhenResumed]
+11-14 16:05:37.607 I/wm_on_paused_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,performPause]
+11-14 16:05:37.999 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320324 line = 2441
+11-14 16:05:37.999 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320319 line = 2441
+11-14 16:05:37.999 D/IMGGralloc(32532): Gralloc Free  w:800, h:1280, f:0x1, usage:0xb00, ui64Stamp:10320204 line = 2441
+11-14 16:05:38.040 I/wm_on_stop_called(32532): [264589738,eu.kanade.tachiyomi.ui.reader.ReaderActivity,STOP_ACTIVITY_ITEM]

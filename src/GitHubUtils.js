@@ -1,12 +1,25 @@
 import * as GitHub from "github-api";
 import * as git from "isomorphic-git"
-import * as http from "isomorphic-git/http/node"
+import * as http from "isomorphic-git/http/web"
 import LightningFS from "@isomorphic-git/lightning-fs"
 import Requestable from "github-api/dist/components/Requestable";
 import CorsProxy from "./CorsProxy";
 
 // Simple flag for testing
 const DRY_RUN = false;
+
+// Rejections can be non-Error values or Errors without a message string.
+function errorMessage(err) {
+    if (err && typeof err.message === 'string' && err.message) {
+        return err.message;
+    }
+    return typeof err === 'string' ? err : '';
+}
+
+function isPushRejected(err) {
+    return !!err && (err.code === 'PushRejectedError' ||
+        /(non-fast-forward|not a simple fast-forward|fetch first)/i.test(errorMessage(err)));
+}
 
 export default class GitHubUtils {
     static createGH(username, pat) {
@@ -16,17 +29,31 @@ export default class GitHubUtils {
         });
     }
 
-    static getRepoList(username, pat) {
+    static getRepoList(username, pat, params) {
         let gh = this.createGH(username, pat);
-        return gh.getUser().listRepos();
+        return gh.getUser().listRepos(Object.assign({
+            per_page: 100,
+            affiliation: 'owner,collaborator,organization_member',
+            sort: 'updated'
+        }, params || {}));
     }
 
-    static createPages(username, repo, branch, pat) {
-        return new RepositoryExtension(repo, {
-            username: username,
-            password: pat
-        }).createPages(branch, null, null);
+    // The user list defaults to 30 entries per page and caps at 100, so walk
+    // the pages instead of showing only the first page.
+    static async getAllRepos(username, pat) {
+        const repos = [];
+        for (let page = 1; page <= 10; page++) {
+            const response = await GitHubUtils.getRepoList(username, pat, { page: page });
+            const batch = (response && response.data) || [];
+            repos.push(...batch);
+            const link = response && response.headers && (response.headers.link || response.headers.Link);
+            if (batch.length < 100 || !link || String(link).indexOf('rel="next"') === -1) {
+                break;
+            }
+        }
+        return repos;
     }
+
 
     static getEmail(username, pat) {
         let gh = this.createGH(username, pat);
@@ -61,7 +88,7 @@ export default class GitHubUtils {
                 return fs;
             })
             .catch((err) => {
-                if (err.message.indexOf('Could not find HEAD') !== -1) {
+                if (errorMessage(err).indexOf('Could not find HEAD') !== -1) {
                     return git.init({
                         fs: fs,
                         dir: '/',
@@ -112,17 +139,42 @@ export default class GitHubUtils {
                 console.log('Not pushing, because DRY_RUN');
             })
         } else {
-            return promise
-                .then(() => {
-                    return git.push({
-                        fs: fs,
-                        dir: '/',
-                        http: http,
-                        corsProxy: CorsProxy.getProxyUrl(),
-                        onAuth: () => ({ username: username, password: pat })
-                    });
-                });
+            return promise.then(() => GitHubUtils.pushOnly(fs, username, pat));
         }
+    }
+
+    static pushOnly(fs, username, pat, force = false) {
+        let authFailed = false;
+        return git.push({
+            fs: fs,
+            dir: '/',
+            http: http,
+            corsProxy: CorsProxy.getProxyUrl(),
+            force: force,
+            onAuth: () => ({ username: username, password: pat }),
+            onAuthFailure: () => {
+                authFailed = true;
+                return { cancel: true };
+            }
+        }).catch(err => {
+            if (authFailed) {
+                const error = new Error('GitHub rejected the token while pushing. Check that it still has the "repo" scope.');
+                error.code = 'AuthFailure';
+                throw error;
+            }
+            if (isPushRejected(err)) {
+                const error = new Error('The repository changed on GitHub while you were editing, so this push was rejected.');
+                error.code = 'PushRejectedError';
+                error.remoteChanged = true;
+                throw error;
+            }
+            throw err;
+        });
+    }
+
+    // Retry the already-committed local state, overwriting the remote branch.
+    static pushForce(fs, username, pat) {
+        return GitHubUtils.pushOnly(fs, username, pat, true);
     }
 
     static addSeries(name, series, username, pat, fs, email) {

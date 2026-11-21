@@ -6,28 +6,27 @@
     "serve": "SET NODE_OPTIONS=--openssl-legacy-provider && SET 'NODE_ENV=development' && vue-cli-service serve",
     "build": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
     "lint": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint",
-    "start": "npm run build && cd desktop-wrapper && npm run start",
     "proxy": "node dev-cors-proxy.js"
   },
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^4.6.0",
-    "buefy": "^0.9.28",
-    "bulmaswatch": "^0.8.1",
+    "buffer": "^5.7.1",
     "core-js": "^3.22.8",
     "github-api": "^3.4.0",
     "isomorphic-git": "^1.17.3",
-    "vue": "^2.6.14"
+    "naive-ui": "^2.38.0",
+    "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.23.0",
     "@isomorphic-git/cors-proxy": "^2.7.1",
-    "@vue/cli-plugin-babel": "~5.0.4",
-    "@vue/cli-plugin-eslint": "~4.5.17",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/runtime-dom": "^3.5.12",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.14"
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
+    "@vue/compiler-sfc": "^3.4.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.20.0"
   },
   "eslintConfig": {
     "root": true,
@@ -35,17 +34,22 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     },
     "rules": {}
   },
   "browserslist": [
-    "> 1%",
     "last 2 versions",
-    "not dead"
+    "not dead",
+    "not ie 11",
+    "not op_mini all",
+    "not kaios > 0",
+    "not and_qq > 0",
+    "not and_uc > 0",
+    "not op_mob > 0"
   ]
 }

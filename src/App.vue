@@ -1,48 +1,47 @@
 <template>
   <div id="app" class="container">
-    <b-loading is-full-page v-model="loading">
+    <div v-if="loading" class="loading-overlay" role="status" aria-live="polite" aria-label="Loading">
       <div class="card">
         <div class="card-content">
           <div class="content">
-            <b-icon
-                pack="fas"
-                icon="sync-alt"
-                custom-class="fa-spin">
-            </b-icon>
-            {{ loadingStatus }}
+            <span class="spinner" aria-hidden="true"></span>
+            {{ loadingStatus || 'Loading…' }}
           </div>
+          <button class="loading-dismiss" type="button" @click="dismissLoader">Cancel</button>
         </div>
       </div>
-    </b-loading>
-    <div class="section">
-      <div class="column">
-        <h1 class="title">facaccimo</h1>
-        <h2 class="subtitle">easy cubari.moe sources</h2>
-      </div>
     </div>
-    <HomePage v-if="page === HOME_PAGE" v-on:finished="cloneRepo" v-on:loading="displayLoader"
-              v-on:loaded="finishLoader"/>
-    <SeriesManager ref="manager" v-if="page === SERIES_MANAGER_PAGE" :series="series" v-on:series="goToSeries"
-                   v-on:delete="deleteSeries" v-on:show="showUrl" v-on:loading="displayLoader"
-                   v-on:loaded="finishLoader"/>
-    <ChapterManager v-if="page === CHAPTER_MANAGER_PAGE" :name="fileName" :series="selectedSeries"
-                    v-on:discard="discardSeries" v-on:save="saveSeries" v-on:chapter="goToChapter"
-                    v-on:loading="displayLoader" v-on:loaded="finishLoader"/>
+    <header class="masthead">
+      <div class="crumb">
+        <span>facaccimo</span>
+        <span aria-hidden="true">/</span>
+        <b>{{ repoName || 'not connected' }}</b>
+      </div>
+      <h1 class="page-title">{{ pageTitle }}</h1>
+      <p class="page-sub" v-if="pageSub">{{ pageSub }}</p>
+    </header>
+    <HomePage v-if="page === HOME_PAGE" @finished="cloneRepo" @loading="displayLoader"
+              @loaded="finishLoader"/>
+    <SeriesManager v-if="page === SERIES_MANAGER_PAGE" :series="series" @series="goToSeries"
+                   @delete="deleteSeries" @show="showUrl"/>
+    <ChapterManager v-if="page === CHAPTER_MANAGER_PAGE" ref="manager" :name="fileName" :series="selectedSeries"
+                    @discard="discardSeries" @save="saveSeries" @chapter="goToChapter"
+                    @loading="displayLoader" @loaded="finishLoader"/>
     <ChapterEditor v-if="page === CHAPTER_EDITOR_PAGE" :chapterKey="chapterKey" :chapter="chapter"
-                   v-on:discard="discardChapter" v-on:save="saveChapter" v-on:loading="displayLoader"
-                   v-on:loaded="finishLoader"/>
+                   @discard="discardChapter" @save="saveChapter" @loading="displayLoader"
+                   @loaded="finishLoader"/>
   </div>
 </template>
 
 <script>
-
 import HomePage from "@/pages/HomePage";
 import SeriesManager from "@/pages/SeriesManager";
 import ChapterManager from "@/pages/ChapterManager";
 import GitHubUtils from "@/GitHubUtils";
 import Series from "@/model/Series";
+import Chapter from "@/model/Chapter";
 import ChapterEditor from "@/pages/ChapterEditor";
-import CorsProxy from "./CorsProxy";
+import DiscordWebhook from "./DiscordWebhook";
 
 export default {
   name: 'App',
@@ -52,6 +51,29 @@ export default {
     HomePage,
     SeriesManager
   },
+  computed: {
+    pageTitle() {
+      if (this.page === this.SERIES_MANAGER_PAGE) {
+        return 'Series';
+      }
+      if (this.page === this.CHAPTER_MANAGER_PAGE) {
+        return (this.selectedSeries && this.selectedSeries.title) || this.fileName || 'Series';
+      }
+      if (this.page === this.CHAPTER_EDITOR_PAGE) {
+        return 'Chapter ' + this.chapterKey;
+      }
+      return 'Get started';
+    },
+    pageSub() {
+      if (this.page === this.HOME_PAGE) {
+        return 'Easy cubari.moe sources, straight from your repository.';
+      }
+      if (this.page === this.SERIES_MANAGER_PAGE) {
+        return this.repoName || '';
+      }
+      return this.fileName || '';
+    }
+  },
   methods: {
     showUrl(fileName) {
       let target = this;
@@ -59,78 +81,70 @@ export default {
       target.loading = true;
       GitHubUtils.getCurrentBranch(this.repoName, this.fs).then(value => {
         return GitHubUtils.getBase64EncodedSlug(
-          GitHubUtils.getSeriesUrl(fileName, value, this.repoName, this.fs)
+          GitHubUtils.getSeriesUrl(fileName, value, this.repoName)
         );
       }).then(value => {
         target.loading = false;
         let url = 'https://cubari.moe/proxy/gist/' + value + '/';
-        this.$buefy.dialog.confirm({
-          title: 'Cubari URL for ' + fileName,
-          message: '<a href="' + url + '" target="_blank">' + url + '</a>',
-          confirmText: 'OK',
-          type: 'is-primary',
-          hasIcon: true
+        this.$link({
+          title: 'Cubari URL',
+          text: fileName,
+          url,
         });
+      }).catch(err => {
+        console.error(err);
+        target.loading = false;
+        target.loadingStatus = '';
+        this.$message.error('Failed to create URL: ' + (err && err.message ? err.message : 'unknown error'));
       })
     },
-    cloneRepo(data) {
+    async cloneRepo(data) {
       this.pat = data.pat;
       this.username = data.username;
       this.repoName = data.repoName;
       this.email = data.email;
+      this.discordWebhook = data.discordWebhook || '';
       let target = this;
       if (this.email === '') {
-        this.$buefy.dialog.prompt({
-          message: `Provide email address that will be associated with commits (usually the same as GitHub one)`,
-          inputAttrs: {
-            placeholder: 'user@example.org'
-          },
-          closeOnConfirm: false,
-          trapFocus: true,
-          canCancel: false,
-          onConfirm: (value, {close}) => {
-            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (re.test(String(value).toLowerCase())) {
-              target.email = value;
-              window.localStorage.setItem('email', target.email);
-              close();
-              target.loading = true;
-              target.loadingStatus = 'Cloning repo';
-              GitHubUtils.cloneRepo(this.repoName).then(value => {
-                target.fs = value;
-                target.loadingStatus = 'Parsing data';
-                target.parseData();
-              }).catch((err) => {
-                console.error(err);
-                target.loading = false;
-                target.loadingStatus = '';
-                this.$buefy.toast.open({message: 'Failed to clone repo!\n' + err.message, type: 'is-danger'});
-              })
-            } else {
-              this.$buefy.toast.open({message: 'Invalid email!', type: 'is-danger'});
-            }
-          }
-        })
-      } else {
-        target.loading = true;
-        target.loadingStatus = 'Cloning repo';
-        GitHubUtils.cloneRepo(this.repoName)
-          .then(value => {
-            target.fs = value;
-            target.loadingStatus = 'Parsing data';
-            target.parseData();
-          }).catch((err) => {
-            console.error(err);
-            target.loading = false;
-            target.loadingStatus = '';
-            this.$buefy.toast.open({message: 'Failed to clone repo!\n' + err.message, type: 'is-danger'});
-          });
+        const email = await this.$prompt({
+          title: 'Email for commits',
+          text: 'Provide the email address that will be associated with your commits (usually the same as your GitHub one).',
+          placeholder: 'user@example.org',
+          positiveText: 'Continue',
+          validate: value => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(value).toLowerCase())
+            ? null
+            : 'Invalid email address'
+        });
+        if (!email) {
+          target.loading = false;
+          return;
+        }
+        target.email = email;
+        window.localStorage.setItem('email', target.email);
       }
+      target.loading = true;
+      target.loadingStatus = 'Cloning repo';
+      GitHubUtils.cloneRepo(this.repoName).then(value => {
+        target.fs = value;
+        target.loadingStatus = 'Parsing data';
+        target.parseData();
+      }).catch((err) => {
+        console.error(err);
+        target.loading = false;
+        target.loadingStatus = '';
+        this.$message.error('Failed to clone repo!\n' + err.message);
+      })
     },
     parseData(/*createIndex*/) {
       this.series = [];
       let noExt = [];
       this.fs.readdir('/', {}, (err, files) => {
+        if (err) {
+          this.loading = false;
+          this.loadingStatus = '';
+          this.$message.error('Failed to read the repository: ' + (err && err.message ? err.message : err));
+          return;
+        }
         let promises = [];
         files.forEach(file => {
           if (file.endsWith('.json') && file !== 'index.json') {
@@ -142,12 +156,10 @@ export default {
                   data: Series.fromJson(JSON.parse(new TextDecoder().decode(data)))
                 });
               } catch (e) {
-                this.$buefy.toast.open({
-                  message: 'Failed to parse ' + file + ': ' + e.message,
-                  type: 'is-danger',
-                  duration: 5000
-                });
+                this.$message.error('Failed to parse ' + file + ': ' + e.message);
               }
+            }).catch(e => {
+              this.$message.error('Failed to read ' + file + ': ' + (e && e.message ? e.message : e));
             }))
           } else if (file.indexOf('.') === -1) {
             promises.push(this.fs.promises.readFile('/' + file, {}).then(data => {
@@ -160,46 +172,28 @@ export default {
               } catch {
                 // We only check whether those files potentially could be series
               }
+            }).catch(e => {
+              this.$message.error('Failed to read ' + file + ': ' + (e && e.message ? e.message : e));
             }))
           }
         });
         return Promise.all(promises).then(async () => {
-          // if (createIndex) {
-          //   let index = [];
-          //   let branch = await GitHubUtils.getCurrentBranch(this.repoName, this.fs);
-          //   for (const series of this.series) {
-          //     this.loadingStatus = "Getting URL for series " + series.data.title;
-          //     index.push({
-          //       'file': series.name,
-          //       'seriesUrl': 'https://cubari.moe/proxy/gist/' + (await GitIO.create(GitHubUtils.getSeriesUrl(series.name, branch, this.repoName, this.fs))) + '/',
-          //       'title': series.data.title,
-          //       'description': series.data.description,
-          //       'artist': series.data.artist,
-          //       'author': series.data.author,
-          //       'cover': series.data.cover,
-          //       'chapters': Object.keys(series.data.chapters).length,
-          //       'lastChapterIndex': "" + Math.max(...Object.keys(series.data.chapters).map(series => +series)),
-          //       'lastChapter': series.data.chapters["" + Math.max(...Object.keys(series.data.chapters).map(series => +series))]
-          //     })
-          //   }
-          //   this.loadingStatus = "Updating index.json";
-          //   await GitHubUtils.addSeries('index.json', index, this.username, this.pat, this.fs, this.email);
-          //   try {
-          //     await GitHubUtils.createPages(this.username, this.repoName, branch, this.pat);
-          //   } catch (e) {
-          //     console.log(e);
-          //   }
-          // }
           this.loading = false;
-          if (noExt.length !== 0) {
-            this.$buefy.dialog.confirm({
-              title: 'Found potential series with no extension',
-              message: 'Found files without extension, that could be series. Do you want to rename them to include ".json" extension?<pre>' + noExt.map(value => value.name).join('\n') + '</pre>',
-              confirmText: 'Rename',
-              type: 'is-primary',
-              hasIcon: true,
-              onConfirm: () => this.renameChapters(noExt),
-              onCancel: () => this.page = this.SERIES_MANAGER_PAGE
+          this.loadingStatus = '';
+          if (noExt.length > 0) {
+            // rename files without extension
+            let noExtNames = noExt.map(item => item.name).join(', ');
+            this.$dialog.warning({
+              title: 'Rename files?',
+              content: 'The following files do not have .json extension: ' + noExtNames + '. Do you want to rename them?',
+              positiveText: 'Rename',
+              negativeText: 'Cancel',
+              onPositiveClick: () => {
+                this.renameChapters(noExt);
+              },
+              onNegativeClick: () => {
+                this.page = this.SERIES_MANAGER_PAGE;
+              }
             });
           } else {
             this.page = this.SERIES_MANAGER_PAGE;
@@ -208,23 +202,34 @@ export default {
             GitHubUtils.getTopics(this.repoName, this.username, this.pat).then(value => {
               let names = value.data.names;
               if (names.indexOf('cubari-source') === -1) {
-                this.$buefy.dialog.confirm({
+                this.$dialog.warning({
                   title: 'Add GitHub topic?',
-                  message: 'Do you want to add "cubari-source" topic to the repo, so that it will be possible to discover?',
-                  confirmText: 'Add',
-                  type: 'is-primary',
-                  hasIcon: true,
-                  onConfirm: () => {
+                  content: 'Do you want to add "cubari-source" topic to the repo, so that it will be possible to discover?',
+                  positiveText: 'Add',
+                  negativeText: 'Cancel',
+                  onPositiveClick: () => {
                     names.push('cubari-source');
-                    GitHubUtils.setTopics(names, this.repoName, this.username, this.pat);
+                    return GitHubUtils.setTopics(names, this.repoName, this.username, this.pat)
+                        .catch(e => {
+                          console.error(e);
+                          this.$message.error('Failed to add the topic: ' + (e && e.message ? e.message : 'unknown error'));
+                        });
                   },
-                  onCancel: () => {
+                  onNegativeClick: () => {
                     window.localStorage.setItem('skipTopics', "1");
                   }
                 });
               }
             })
+                .catch(e => {
+                  // Optional convenience feature: never block the series list for it.
+                  console.error('Failed to check repository topics', e);
+                })
           }
+        }).catch(e => {
+          this.loading = false;
+          this.loadingStatus = '';
+          this.$message.error('Failed to parse the repository: ' + (e && e.message ? e.message : e));
         });
       })
     },
@@ -244,56 +249,317 @@ export default {
       GitHubUtils.push(GitHubUtils.commit(Promise.all(promises), this.fs, 'Add .json extensions', this.email), this.fs, this.username, this.pat).then(() => {
         target.loading = false;
         this.page = this.SERIES_MANAGER_PAGE;
+      }).catch(err => {
+        console.error(err);
+        target.loading = false;
+        target.loadingStatus = '';
+        this.$message.error('Failed to rename files: ' + (err && err.message ? err.message : 'unknown error'));
       })
     },
     deleteSeries(fileName) {
       this.loadingStatus = 'Deleting ' + fileName;
       this.loading = true;
-      let target = this;
       GitHubUtils.deleteSeries(fileName, this.username, this.pat, this.fs, this.email).then(() => {
-        target.parseData();
-        target.loading = false;
-        this.$buefy.toast.open('Series deleted!')
+        const deleted = this.series.find(s => s.name === fileName);
+        this.series = this.series.filter(s => s.name !== fileName);
+        this.loading = false;
+        this.$message.success('Series deleted!')
+        if (deleted) {
+          DiscordWebhook.sendAll(this.discordWebhook, [
+            DiscordWebhook.buildSummaryEmbed(deleted.data, 'delete')
+          ]);
+        }
+      }).catch(async err => {
+        console.error(err);
+        this.loading = false;
+        this.loadingStatus = '';
+        if (err && err.remoteChanged) {
+          const ok = await this.$confirm({
+            title: 'Repository changed on GitHub',
+            content: err.message + ' Force-push the deletion so ' + fileName + ' is removed from the remote copy?',
+            positiveText: 'Force push',
+            negativeText: 'Cancel',
+            type: 'warning'
+          });
+          if (!ok) {
+            this.$message.warning('Nothing was pushed. Reload the page to pick up the remote changes.');
+            return;
+          }
+          this.forcePush(() => {
+            const deleted = this.series.find(s => s.name === fileName);
+            this.series = this.series.filter(s => s.name !== fileName);
+            if (deleted) {
+              DiscordWebhook.sendAll(this.discordWebhook, [
+                DiscordWebhook.buildSummaryEmbed(deleted.data, 'delete')
+              ]);
+            }
+          }, 'Series deleted with a force push!');
+          return;
+        }
+        this.$message.error('Failed to delete ' + fileName + ': ' + (err && err.message ? err.message : 'unknown error'));
       })
     },
-    goToSeries(name) {
-      this.fs.promises.readFile('/' + name, {}).then(value => {
-        this.fileName = name;
-        this.selectedSeries = Series.fromJson(JSON.parse(new TextDecoder().decode(value)));
-        this.page = this.CHAPTER_MANAGER_PAGE;
-      })
-          .catch(() => {
-            this.fileName = name;
-            this.selectedSeries = new Series(name.replace('.json', ''));
-            this.page = this.CHAPTER_MANAGER_PAGE;
-          })
+    async goToSeries(name) {
+      let raw;
+      try {
+        raw = await this.fs.promises.readFile('/' + name, {});
+      } catch (err) {
+        // Only a genuinely missing file means "new series": every other read
+        // failure must not silently open an empty editor that would then
+        // overwrite the real file on GitHub.
+        if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR' ||
+            (typeof err.message === 'string' && /ENOENT|ENOTDIR/.test(err.message)))) {
+          this.fileName = name;
+          this.selectedSeries = new Series(name.replace(/\.json$/i, ''));
+          this.page = this.CHAPTER_MANAGER_PAGE;
+          this.dirty = true;
+          this.originalSeries = null;
+          return;
+        }
+        this.$message.error('Failed to open ' + name + ': ' + (err && err.message ? err.message : 'unknown error'));
+        return;
+      }
+      let series;
+      try {
+        series = Series.fromJson(JSON.parse(new TextDecoder().decode(raw)));
+      } catch (err) {
+        // Refuse to open a malformed file: its first save would replace the
+        // real content with an empty series.
+        this.$message.error('Failed to parse ' + name + ': ' + (err && err.message ? err.message : 'unknown error') + '. The file was left untouched.');
+        return;
+      }
+      this.fileName = name;
+      this.selectedSeries = series;
+      this.page = this.CHAPTER_MANAGER_PAGE;
+      this.dirty = true;
+      this.originalSeries = JSON.parse(JSON.stringify(series));
     },
     discardSeries() {
       this.page = this.SERIES_MANAGER_PAGE;
+      this.dirty = false;
     },
     saveSeries(name, series) {
       this.loadingStatus = 'Saving ' + name;
       this.loading = true;
-      let target = this;
       GitHubUtils.addSeries(name, series, this.username, this.pat, this.fs, this.email).then(() => {
-        target.parseData(true);
-      }).catch(e => {
+        const diffEntries = this.computeSeriesDiff(this.originalSeries, series);
+        this.rememberSavedSeries(name, series);
+        this.originalSeries = JSON.parse(JSON.stringify(series));
+        this.dirty = false;
+        this.loading = false;
+        const embeds = [];
+        if (diffEntries) {
+          diffEntries.forEach(entry => {
+            embeds.push(DiscordWebhook.buildEntryEmbed(entry.title, entry.diff, 0x5e6ad2, series));
+          });
+        }
+        // Always include a summary embed with counts.
+        embeds.unshift(DiscordWebhook.buildSummaryEmbed(series, 'save'));
+        DiscordWebhook.sendAll(this.discordWebhook, embeds);
+      }).catch(async e => {
         console.log(e);
-        target.loading = false;
-        this.$buefy.toast.open({message: 'Error saving series!' + (e.data ? '\n' + e.data.response : ''), type: 'is-danger', duration: 5000})
+        this.loading = false;
+        this.loadingStatus = '';
+        if (e && e.remoteChanged) {
+          const ok = await this.$confirm({
+            title: 'Repository changed on GitHub',
+            content: e.message + ' Force-push your changes to overwrite the remote copy?',
+            positiveText: 'Force push',
+            negativeText: 'Cancel',
+            type: 'warning'
+          });
+          if (!ok) {
+            this.$message.warning('Nothing was pushed. Reload the page to pick up the remote changes.');
+            return;
+          }
+          this.forcePush(() => {
+            this.rememberSavedSeries(name, series);
+            const diffEntries = this.computeSeriesDiff(this.originalSeries, series);
+            this.originalSeries = JSON.parse(JSON.stringify(series));
+            this.dirty = false;
+            const embeds = [];
+            if (diffEntries) {
+              diffEntries.forEach(entry => {
+                embeds.push(DiscordWebhook.buildEntryEmbed(entry.title, entry.diff, 0x5e6ad2, series));
+              });
+            }
+            embeds.unshift(DiscordWebhook.buildSummaryEmbed(series, 'save'));
+            DiscordWebhook.sendAll(this.discordWebhook, embeds);
+          }, 'Saved ' + name + ' with a force push!');
+          return;
+        }
+        this.$message.error('Error saving series: ' + (e && e.message ? e.message : 'unknown error'));
+      });
+    },
+    rememberSavedSeries(name, series) {
+      // Store a detached copy: the editor keeps mutating `selectedSeries`,
+      // and the list must not show edits that were never saved.
+      const snapshot = Series.fromJson(JSON.parse(JSON.stringify(series)));
+      const existing = this.series.find(s => s.name === name);
+      if (existing) {
+        existing.data = snapshot;
+      } else {
+        this.series.push({ name: name, data: snapshot });
+      }
+    },
+    computeSeriesDiff(oldSeries, newSeries) {
+      if (!oldSeries) {
+        // New series: one entry listing all chapters.
+        const chapters = Object.keys(newSeries.chapters || {});
+        const lines = ['+ New series'];
+        chapters.slice(0, 20).forEach(k => { lines.push('+ Chapter ' + k); });
+        if (chapters.length > 20) lines.push('+ ... and ' + (chapters.length - 20) + ' more');
+        return [{ title: 'New series', diff: lines.join('\n') }];
+      }
+      const entries = [];
+      const oldChapters = oldSeries.chapters || {};
+      const newChapters = newSeries.chapters || {};
+      const oldKeys = Object.keys(oldChapters);
+      const newKeys = Object.keys(newChapters);
+
+      // Added chapters
+      const added = newKeys.filter(k => !Object.prototype.hasOwnProperty.call(oldChapters, k));
+      if (added.length > 0) {
+        entries.push({ title: 'Added chapters', diff: added.map(k => '+ Chapter ' + k).join('\n') });
+      }
+
+      // Removed chapters
+      const removed = oldKeys.filter(k => !Object.prototype.hasOwnProperty.call(newChapters, k));
+      if (removed.length > 0) {
+        entries.push({ title: 'Removed chapters', diff: removed.map(k => '- Chapter ' + k).join('\n') });
+      }
+
+      // Changed chapters
+      newKeys.filter(k => Object.prototype.hasOwnProperty.call(oldChapters, k)).forEach(k => {
+        const o = oldChapters[k];
+        const n = newChapters[k];
+        const changes = [];
+        if (o.title !== n.title) {
+          changes.push('- title: "' + (o.title || '') + '"');
+          changes.push('+ title: "' + (n.title || '') + '"');
+        }
+        if (o.volume !== n.volume) {
+          changes.push('- volume: "' + (o.volume || '') + '"');
+          changes.push('+ volume: "' + (n.volume || '') + '"');
+        }
+        if (o.last_updated !== n.last_updated) {
+          changes.push('- date: ' + (o.last_updated || ''));
+          changes.push('+ date: ' + (n.last_updated || ''));
+        }
+        const oldPageStr = JSON.stringify(o.groups);
+        const newPageStr = JSON.stringify(n.groups);
+        if (oldPageStr !== newPageStr) {
+          const oldPages = Array.isArray(o.groups) ? o.groups : (o.groups ? Object.values(o.groups).flat() : []);
+          const newPages = Array.isArray(n.groups) ? n.groups : (n.groups ? Object.values(n.groups).flat() : []);
+          const oldSet = new Set(oldPages.map(String));
+          const newSet = new Set(newPages.map(String));
+          const addedCount = newPages.filter(p => !oldSet.has(String(p))).length;
+          const removedCount = oldPages.filter(p => !newSet.has(String(p))).length;
+          const parts = [];
+          if (addedCount > 0) parts.push('+' + addedCount + ' page' + (addedCount === 1 ? '' : 's'));
+          if (removedCount > 0) parts.push('-' + removedCount + ' page' + (removedCount === 1 ? '' : 's'));
+          changes.push('- pages: ' + oldPages.length);
+          changes.push('+ pages: ' + newPages.length + (parts.length > 0 ? ' (' + parts.join(', ') + ')' : ''));
+        }
+        if (changes.length > 0) {
+          entries.push({ title: 'Chapter ' + k, diff: changes.join('\n') });
+        }
+      });
+
+      // Metadata
+      const metaFields = ['title', 'artist', 'author', 'cover', 'description'];
+      const metaChanges = [];
+      metaFields.forEach(f => {
+        if (oldSeries[f] !== newSeries[f]) {
+          metaChanges.push('- ' + f + ': "' + (oldSeries[f] || '') + '"');
+          metaChanges.push('+ ' + f + ': "' + (newSeries[f] || '') + '"');
+        }
+      });
+      if (metaChanges.length > 0) {
+        entries.push({ title: 'Metadata', diff: metaChanges.join('\n') });
+      }
+
+      return entries.length > 0 ? entries : null;
+    },
+    // The commit already exists locally; retrying with force overwrites the
+    // remote branch so the session is not stuck behind a rejected push.
+    forcePush(onSuccess, successMessage) {
+      this.loadingStatus = 'Force pushing';
+      this.loading = true;
+      GitHubUtils.pushForce(this.fs, this.username, this.pat).then(() => {
+        this.loading = false;
+        this.loadingStatus = '';
+        if (onSuccess) onSuccess();
+        this.$message.success(successMessage);
+      }).catch(err => {
+        console.error(err);
+        this.loading = false;
+        this.loadingStatus = '';
+        this.$message.error('Force push failed: ' + (err && err.message ? err.message : 'unknown error'));
       });
     },
     goToChapter(key, chapter) {
       this.chapterKey = key;
-      this.chapter = chapter;
+      this.saveChapterScroll();
+      // Edit a detached copy so "Discard" really discards.
+      this.chapter = chapter
+        ? new Chapter(
+          chapter.title,
+          chapter.volume,
+          chapter.last_updated,
+          JSON.parse(JSON.stringify(chapter.groups || {}))
+        )
+        : chapter;
       this.page = this.CHAPTER_EDITOR_PAGE;
+      this.dirty = true;
     },
     discardChapter() {
       this.page = this.CHAPTER_MANAGER_PAGE;
+      this.restoreChapterScroll();
+      this.dirty = false;
     },
     saveChapter(key, chapter) {
       this.selectedSeries.chapters[key] = chapter;
       this.page = this.CHAPTER_MANAGER_PAGE;
+      this.restoreChapterScroll();
+      this.dirty = false;
+    },
+    // Remember where the chapter table was when opening the editor: the list
+    // is recreated on every page switch, so the document otherwise restarts
+    // at the top and the user loses their place in a long table.
+    saveChapterScroll() {
+      this.chapterScroll = {
+        x: window.scrollX,
+        y: window.scrollY,
+        tableTop: this.chapterTableTop()
+      };
+    },
+    restoreChapterScroll() {
+      let saved = this.chapterScroll;
+      this.chapterScroll = null;
+      if (!saved) {
+        return;
+      }
+      this.$nextTick(() => {
+        let top = saved.tableTop === null ? 0 : this.chapterTableTop() - saved.tableTop;
+        window.scrollTo(saved.x, Math.max(0, Math.min(saved.y + top, this.maxScrollY())));
+      });
+    },
+    chapterTableTop() {
+      const table = this.$refs.manager && this.$refs.manager.$el
+          ? this.$refs.manager.$el.querySelector('.table-wrap')
+          : null;
+      return table ? table.getBoundingClientRect().top + window.scrollY : null;
+    },
+    maxScrollY() {
+      const doc = document.documentElement;
+      return Math.max(0, (doc.scrollHeight || 0) - window.innerHeight);
+    },
+    onBeforeUnload(event) {
+      if (this.dirty || this.page === this.CHAPTER_MANAGER_PAGE || this.page === this.CHAPTER_EDITOR_PAGE) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
     },
     displayLoader(msg) {
       this.loading = true;
@@ -301,25 +567,57 @@ export default {
     },
     finishLoader() {
       this.loading = false;
+      this.loadingStatus = '';
+    },
+    dismissLoader() {
+      this.loading = false;
+      this.loadingStatus = '';
+      this.$message.warning('Operation cancelled.');
     }
   },
   mounted() {
     if (process.env.NODE_ENV === 'development') {
       document.title = 'facaccimo (dev)';
     }
+    window.addEventListener('beforeunload', this.onBeforeUnload);
     CorsProxy.isAvailable().then(value => {
       if (!value) {
-        this.$buefy.dialog.confirm({
+        this.$dialog.warning({
           title: 'CORS proxy not available',
-          message: 'CORS proxy is not available. Start it to continue the development.',
-          confirmText: 'OK',
-          type: 'is-primary',
-          hasIcon: true
+          content: 'The CORS proxy at ' + CorsProxy.getProxyUrl() + ' is not reachable. Start it with "npm run proxy" and reload the page.',
+          positiveText: 'OK',
         });
       } else if (process.env.NODE_ENV === 'development') {
-        this.$buefy.toast.open({message: 'CORS proxy is available', type: 'is-success'});
+        this.$message.success('CORS proxy is available');
       }
     });
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.onBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.onBeforeUnload);
+    if (this.loadingTimer) {
+      clearTimeout(this.loadingTimer);
+      this.loadingTimer = null;
+    }
+  },
+  watch: {
+    loading(value) {
+      if (this.loadingTimer) {
+        clearTimeout(this.loadingTimer);
+        this.loadingTimer = null;
+      }
+      if (value) {
+        this.loadingTimer = setTimeout(() => {
+          if (this.loading) {
+            this.loading = false;
+            this.loadingStatus = '';
+            this.$message.warning('The operation took too long and was cancelled. Try again.');
+          }
+        }, 60000);
+      }
+    }
   },
   data: function () {
     return {
@@ -329,23 +627,62 @@ export default {
       CHAPTER_EDITOR_PAGE: 'chapterEditor',
       page: 'home',
       email: '',
+      discordWebhook: '',
       pat: '',
       username: '',
       repoName: '',
       fileName: '',
       chapterKey: '',
       chapter: null,
-      saved: false,
+      chapterScroll: null,
+      dirty: false,
+      loadingTimer: null,
       loading: false,
       loadingStatus: '',
       fs: null,
       series: [],
       selectedSeries: null,
+      originalSeries: null,
     }
   }
 }
 </script>
 
 <style>
-
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--hair);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(6, 7, 8, .72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .loading-overlay .card { text-align: center; }
+  .loading-dismiss {
+    margin-top: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--hair);
+    color: var(--ink);
+    border-radius: 7px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .loading-dismiss:hover { background: var(--surface-3); }
 </style>

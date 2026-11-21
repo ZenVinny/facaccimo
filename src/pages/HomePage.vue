@@ -14,42 +14,58 @@
             <p v-if="step === 1">Do you have a GitHub account?</p>
             <p v-if="step === 2">Create an account <a href="https://github.com/" target="_blank">here</a></p>
             <p v-if="step === 3">Do you have a Personal Access Token?</p>
-            <p v-if="step === 4">Create a Personal Access Token (or use existing one if already created) <a
+            <div v-if="step === 4">
+              <p>Create a Personal Access Token (or use existing one if already created) <a
                 href="https://github.com/settings/tokens/new?scopes=repo,user:email&description=facaccimo"
                 target="_blank">here</a>
-            </p>
+              </p>
+            </div>
             <div v-if="step === 5">
               <p>Fill your GitHub username and Personal Access Token</p>
-              <b-field label="Username">
-                <b-input v-model="username" required validation-message="This field is required!"></b-input>
-              </b-field>
-              <b-field label="Personal Access Token">
-                <b-input v-model="pat" required validation-message="This field is required!"></b-input>
-              </b-field>
+              <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                  <input class="input" v-model="username" required placeholder="Username">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Personal Access Token</label>
+                <div class="control">
+                  <input class="input" v-model="pat" required placeholder="Personal Access Token">
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Discord webhook URL (optional)</label>
+                <div class="control">
+                  <input class="input" v-model="discordWebhook" placeholder="https://discord.com/api/webhooks/...">
+                </div>
+                <p class="help">Paste a Discord channel webhook URL to get a notification on every save or delete. Leave blank to disable.</p>
+              </div>
             </div>
             <p v-if="step === 6">Do you have a repository already?</p>
             <div v-if="step === 7">
               <p>Set the repository name</p>
-              <b-field label="Repository name">
-                <b-input v-model="repoName" required validation-message="This field is required!"></b-input>
-              </b-field>
+              <div class="field">
+                <label class="label">Repository name</label>
+                <div class="control">
+                  <input class="input" v-model="repoName" required placeholder="Repository name">
+                </div>
+              </div>
             </div>
-
             <div v-if="step === 8">
               <p>Select repository from the list</p>
-              <RepoList :username="username" :pat="pat" v-on:repo-selected="onRepoSelected"/>
+              <RepoList :username="username" :pat="pat" @repo-selected="onRepoSelected"/>
             </div>
             <p v-if="step === 9">Do you want to save Personal Access Token and repository name for the future (using
               browser's Local Storage)?</p>
           </div>
         </div>
         <footer class="card-footer">
-          <a v-if="step === 0 && saved" href="#" @click="goToManager()" class="card-footer-item">Load saved</a>
-          <a v-if="actionType === ACTION_BEGIN" href="#" @click="nextStep()" class="card-footer-item"
-             :class="canContinue ? '' : 'disabled'">Begin</a>
-          <a v-if="actionType === ACTION_NEXT" href="#" @click="nextStep()" class="card-footer-item">Next</a>
-          <a v-if="actionType === ACTION_YES_NO" href="#" @click="nextStep(false)" class="card-footer-item">No</a>
-          <a v-if="actionType === ACTION_YES_NO" href="#" @click="nextStep(true)" class="card-footer-item">Yes</a>
+          <a v-if="step === 0 && saved" href="#" @click.prevent="goToManager()" class="card-footer-item">Load saved</a>
+          <a v-if="actionType === ACTION_BEGIN" href="#" @click.prevent="nextStep()" class="card-footer-item">Begin</a>
+          <a v-if="actionType === ACTION_NEXT" href="#" @click.prevent="nextStep()" class="card-footer-item">Next</a>
+          <a v-if="actionType === ACTION_YES_NO" href="#" @click.prevent="nextStep(false)" class="card-footer-item">No</a>
+          <a v-if="actionType === ACTION_YES_NO" href="#" @click.prevent="nextStep(true)" class="card-footer-item">Yes</a>
         </footer>
       </div>
     </div>
@@ -57,7 +73,6 @@
 </template>
 
 <script>
-
 import RepoList from "@/components/RepoList";
 import GitHubUtils from "@/GitHubUtils";
 
@@ -67,47 +82,24 @@ export default {
   data: function () {
     return {
       ACTION_BEGIN: 'begin',
-      ACTION_YES_NO: 'yes_no',
       ACTION_NEXT: 'next',
+      ACTION_YES_NO: 'yes_no',
       ACTION_NONE: 'none',
       step: 0,
       actionType: 'begin',
-      repoName: '',
       username: '',
       pat: '',
+      repoName: '',
       email: '',
-      saved: false
-    }
-  },
-  computed: {
-    canContinue: function () {
-      if (this.step === 5) {
-        return this.pat && this.username && this.pat !== '' && this.username !== '';
-      }
-      if (this.step === 7) {
-        return this.repoName && this.repoName !== '';
-      }
-      return true;
-    }
-  },
-  beforeMount() {
-    if (window.localStorage.getItem('pat') && window.localStorage.getItem('username') && window.localStorage.getItem('repo')) {
-      this.pat = window.localStorage.getItem('pat');
-      this.username = window.localStorage.getItem('username');
-      this.repoName = window.localStorage.getItem('repo');
-      this.email = window.localStorage.getItem('email') ?? '';
-      this.saved = true;
+      discordWebhook: '',
+      saved: false,
     }
   },
   methods: {
-    nextStep: function (value) {
-      if (!this.canContinue) return;
+    nextStep(value) {
       if (this.step === 0) {
-        this.actionType = this.ACTION_YES_NO;
         this.step = 1;
-        this.pat = '';
-        this.username = '';
-        this.repoName = '';
+        this.actionType = this.ACTION_YES_NO;
       } else if (this.step === 1) {
         if (value) {
           this.step = 3;
@@ -117,7 +109,7 @@ export default {
           this.actionType = this.ACTION_NEXT;
         }
       } else if (this.step === 2) {
-        this.step = 3;
+        this.step = 1;
         this.actionType = this.ACTION_YES_NO;
       } else if (this.step === 3) {
         if (value) {
@@ -139,34 +131,32 @@ export default {
           target.step = 6;
           target.actionType = this.ACTION_YES_NO;
         }).catch(() => {
-          // We can't get user's email. Let's check whether token is valid at all. If we get repo list, then we just don't have email permission.
-          GitHubUtils.getRepoList(this.username, this.pat)
-              .then(() => {
+          return GitHubUtils.getRepoList(this.username, this.pat)
+              .then(async () => {
                 this.$emit('loaded');
-                this.$buefy.dialog.prompt({
-                  message: `Provide email address that will be associated with commits (usually the same as GitHub one)`,
-                  inputAttrs: {
-                    placeholder: 'user@example.org'
-                  },
-                  closeOnConfirm: false,
-                  trapFocus: true,
-                  canCancel: false,
-                  onConfirm: (value, {close}) => {
-                    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    if (re.test(String(value).toLowerCase())) {
-                      target.email = value;
-                      target.step = 6;
-                      target.actionType = this.ACTION_YES_NO;
-                      close();
-                    } else {
-                      this.$buefy.toast.open({message: 'Invalid email!', type: 'is-danger'});
-                    }
-                  }
-                })
+                const email = await this.$prompt({
+                  title: 'Email for commits',
+                  text: 'Provide the email address associated with commits (usually the same as your GitHub one).',
+                  placeholder: 'user@example.org',
+                  positiveText: 'Continue',
+                  validate: value => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(value).toLowerCase())
+                    ? null
+                    : 'Invalid email address'
+                });
+                if (email) {
+                  target.email = email;
+                  target.step = 6;
+                  target.actionType = this.ACTION_YES_NO;
+                }
               })
-              .catch(() => {
+              .catch(error => {
                 this.$emit('loaded');
-                this.$buefy.toast.open({message: 'Invalid credentials!', type: 'is-danger'});
+                const status = error && (error.status || (error.response && error.response.status));
+                if (status === 401 || status === 403) {
+                  this.$message.error('Invalid credentials!');
+                } else {
+                  this.$message.error('Could not reach GitHub: ' + (error && error.message ? error.message : 'unknown error'));
+                }
               })
         })
       } else if (this.step === 6) {
@@ -186,6 +176,9 @@ export default {
             this.$emit('loaded');
             this.step = 9;
             this.actionType = this.ACTION_YES_NO;
+          }).catch(err => {
+            this.$emit('loaded');
+            this.$message.error('Failed to create repository: ' + (err && err.message ? err.message : 'unknown error'));
           });
         } else {
           this.step = 9;
@@ -197,6 +190,7 @@ export default {
           window.localStorage.setItem('username', this.username);
           window.localStorage.setItem('repo', this.repoName);
           window.localStorage.setItem('email', this.email);
+          window.localStorage.setItem('discordWebhook', this.discordWebhook);
         }
         this.goToManager();
       }
@@ -206,29 +200,38 @@ export default {
       this.actionType = this.ACTION_NEXT;
     },
     goToManager() {
+      let target = this;
       GitHubUtils.createGH(this.username, this.pat).getUser().getProfile().then(() => {
-        this.$emit('finished', {pat: this.pat, username: this.username, repoName: this.repoName, email: this.email});
-      }).catch(err => {
-        this.$buefy.dialog.prompt({
-          message: `The token you provided is not valid or has expired. Please provide a valid token. You can check them <a href="https://github.com/settings/tokens" target="_blank">here</a>`,
-          closeOnConfirm: false,
-          trapFocus: true,
-          canCancel: false,
-          onConfirm: (value, {close}) => {
-            this.pat = value;
-            window.localStorage.setItem('pat', this.pat);
-            close();
-            this.$emit('finished', {pat: this.pat, username: this.username, repoName: this.repoName, email: this.email});
-          }
-        });
+        target.$emit('finished', {pat: target.pat, username: target.username, repoName: target.repoName, email: target.email, discordWebhook: target.discordWebhook});
+      }).catch(async err => {
         console.log(err);
+        const value = await this.$prompt({
+          title: 'Token expired',
+          text: 'The token you provided is not valid or has expired. Provide the email address to associate with commits (usually the same as your GitHub one).',
+          placeholder: 'user@example.org',
+          positiveText: 'Continue',
+          validate: email => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(email).toLowerCase())
+            ? null
+            : 'Invalid email address'
+        });
+        if (!value) {
+          return;
+        }
+        target.email = value;
+        window.localStorage.setItem('pat', target.pat);
+        target.$emit('finished', {pat: target.pat, username: target.username, repoName: target.repoName, email: target.email, discordWebhook: target.discordWebhook});
       });
     }
   },
-  props: {}
+  mounted() {
+    if (window.localStorage.getItem('pat') && window.localStorage.getItem('username') && window.localStorage.getItem('repo')) {
+      this.pat = window.localStorage.getItem('pat');
+      this.username = window.localStorage.getItem('username');
+      this.repoName = window.localStorage.getItem('repo');
+      this.email = window.localStorage.getItem('email') ?? '';
+      this.discordWebhook = window.localStorage.getItem('discordWebhook') ?? '';
+      this.saved = true;
+    }
+  }
 }
 </script>
-
-<style scoped>
-
-</style>
