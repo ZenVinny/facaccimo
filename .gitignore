@@ -4,6 +4,7 @@ node_modules
 
 *.sh
 *.pid
+issues.md
 /cors-buster
 
 # local env files

@@ -157,9 +157,9 @@
                            :aria-label="'Select chapter ' + chapter">
                   </td>
                   <td>{{ chapter }}</td>
-                  <td>{{ series.chapters[chapter].title }}</td>
-                  <td>{{ series.chapters[chapter].volume }}</td>
-                  <td>{{ ''+new Date(series.chapters[chapter].getLastUpdated()).toLocaleDateString() }}</td>
+                  <td>{{ series.chapters[chapter] ? (series.chapters[chapter].title || '') : '' }}</td>
+                  <td>{{ series.chapters[chapter] ? (series.chapters[chapter].volume || '') : '' }}</td>
+                  <td>{{ series.chapters[chapter] ? '' + new Date(series.chapters[chapter].getLastUpdated()).toLocaleDateString() : '' }}</td>
                   <td>
                     <div class="buttons">
                       <button class="btn-primary" @click="editChapter(chapter)">Edit</button>
@@ -334,6 +334,9 @@ export default {
             .catch(error => {
               this.$emit('loaded');
               this.$message.error('Failed to fetch chapters: ' + error.message);
+            })
+            .finally(() => {
+              this.isCoverSearching = false;
             });
         return;
       }
@@ -416,22 +419,25 @@ export default {
     editChapter(number) {
       let lastVolume = '';
       let lastGroup = '';
-      let keys = Object.keys(this.series.chapters);
+      let keys = this.sortedChapters;
       if (keys.length > 0) {
-        let lastChapter = this.series.chapters[keys[keys.length - 1]];
-        lastVolume = lastChapter.volume;
-        lastGroup = Groups.getGroupName(lastChapter.groups);
+        let lastChapter = this.series.chapters[keys[0]];
+        lastVolume = lastChapter ? lastChapter.volume : '';
+        lastGroup = lastChapter ? Groups.getGroupName(lastChapter.groups) : '';
       }
       this.$emit('chapter', number, this.series.chapters[number] ?? new Chapter(number, lastVolume, null, Groups.getImagesGroup(lastGroup, '')));
     },
     async addNewChapter() {
       let key = '';
-      let keys = this.sortedChapters;
-      if (keys.length > 0) {
-        let lastKey = keys[0];
-        if (!isNaN(+lastKey)) {
-          key = +lastKey + 1;
+      let maxNum = null;
+      for (const k of Object.keys(this.series.chapters)) {
+        const n = Number(k);
+        if (!isNaN(n) && (maxNum === null || n > maxNum)) {
+          maxNum = n;
         }
+      }
+      if (maxNum !== null) {
+        key = maxNum + 1;
       }
       const value = await this.$prompt({
         title: 'New chapter',
@@ -518,13 +524,17 @@ export default {
       this.isCoverSearching = false;
     },
     compareChapterNames(a, b, isAsc = false) {
-      if (a === b || isNaN(+a) || isNaN(+b)) {
-        return 0;
+      if (a === b) return 0;
+      const na = Number(a);
+      const nb = Number(b);
+      const aNum = !isNaN(na) && String(a).trim() !== '';
+      const bNum = !isNaN(nb) && String(b).trim() !== '';
+      if (aNum && bNum) {
+        return isAsc ? na - nb : nb - na;
       }
-      if (isAsc) {
-        return (+a) - (+b);
-      }
-      return (+b) - (+a);
+      if (aNum) return -1;
+      if (bNum) return 1;
+      return isAsc ? String(a).localeCompare(String(b)) : String(b).localeCompare(String(a));
     }
   },
   beforeUnmount() {

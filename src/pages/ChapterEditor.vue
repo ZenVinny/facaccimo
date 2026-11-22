@@ -132,6 +132,7 @@ export default {
     }
   },
   beforeMount() {
+    if (!this.chapter) return;
     this.isProxy = Groups.isProxy(this.chapter.groups);
     this.pages = Groups.getPages(this.chapter.groups);
     this.groupName = Groups.getGroupName(this.chapter.groups);
@@ -171,6 +172,11 @@ export default {
       if (this.originalGroupName !== this.groupName &&
           Object.prototype.hasOwnProperty.call(groups, this.originalGroupName)) {
         delete groups[this.originalGroupName];
+      }
+      if (this.groupName !== this.originalGroupName &&
+          Object.prototype.hasOwnProperty.call(groups, this.groupName)) {
+        this.$message.error('A group with that name already exists');
+        return;
       }
       Object.assign(groups, Groups.getGroups(this.groupName, this.pages, this.isProxy));
       this.chapter.groups = groups;

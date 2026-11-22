@@ -111,14 +111,14 @@ vue.config.js          build config, Node polyfill fallbacks, Buffer ProvidePlug
 
 ## Changelog
 
-Changes are recorded in [`CHANGELOGS.md`](CHANGELOGS.md). Each entry is a single line with a timestamp in `MM.DD.YYYY | HH:MM` format followed by a short description of the change and the affected files.
+Changes are recorded in [`CHANGELOGS.md`](CHANGELOGS.md). Each entry is a single line with a timestamp in `MM.DD.YYYY` format followed by a short description of the change and the affected files. Entries are ordered newest first (most recent at the top).
 
 To get the current timestamp for a new entry, open the browser console on any page and run:
 
 ```js
 const d = new Date();
 const pad = n => String(n).padStart(2, '0');
-pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + '.' + d.getFullYear() + ' | ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + '.' + d.getFullYear();
 ```
 
 Copy the result and prefix your changelog line with it.

@@ -147,6 +147,8 @@ export default {
                   target.email = email;
                   target.step = 6;
                   target.actionType = this.ACTION_YES_NO;
+                } else {
+                  this.$emit('loaded');
                 }
               })
               .catch(error => {
@@ -169,6 +171,10 @@ export default {
         }
       } else if (this.step === 7 || this.step === 8) {
         if (this.step === 7) {
+          if (!this.repoName || !this.repoName.trim()) {
+            this.$message.error('Repository name cannot be empty');
+            return;
+          }
           let target = this;
           this.$emit('loading', 'Creating repo');
           GitHubUtils.createRepo(this.username, this.pat, this.repoName).then(value1 => {
@@ -205,6 +211,11 @@ export default {
         target.$emit('finished', {pat: target.pat, username: target.username, repoName: target.repoName, email: target.email, discordWebhook: target.discordWebhook});
       }).catch(async err => {
         console.log(err);
+        const status = err && (err.status || (err.response && err.response.status));
+        if (status !== 401 && status !== 403) {
+          this.$message.error('Could not reach GitHub: ' + (err && err.message ? err.message : 'unknown error'));
+          return;
+        }
         const value = await this.$prompt({
           title: 'Token expired',
           text: 'The token you provided is not valid or has expired. Provide the email address to associate with commits (usually the same as your GitHub one).',

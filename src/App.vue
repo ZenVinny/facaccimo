@@ -7,7 +7,7 @@
             <span class="spinner" aria-hidden="true"></span>
             {{ loadingStatus || 'Loading…' }}
           </div>
-          <button class="loading-dismiss" type="button" @click="dismissLoader">Cancel</button>
+
         </div>
       </div>
     </div>
@@ -42,6 +42,7 @@ import Series from "@/model/Series";
 import Chapter from "@/model/Chapter";
 import ChapterEditor from "@/pages/ChapterEditor";
 import DiscordWebhook from "./DiscordWebhook";
+import CorsProxy from "@/CorsProxy";
 
 export default {
   name: 'App',
@@ -76,15 +77,14 @@ export default {
   },
   methods: {
     showUrl(fileName) {
-      let target = this;
-      target.loadingStatus = 'Creating URL';
-      target.loading = true;
+      this.loadingStatus = 'Creating URL';
+      this.loading = true;
       GitHubUtils.getCurrentBranch(this.repoName, this.fs).then(value => {
         return GitHubUtils.getBase64EncodedSlug(
           GitHubUtils.getSeriesUrl(fileName, value, this.repoName)
         );
       }).then(value => {
-        target.loading = false;
+        this.loading = false;
         let url = 'https://cubari.moe/proxy/gist/' + value + '/';
         this.$link({
           title: 'Cubari URL',
@@ -93,8 +93,8 @@ export default {
         });
       }).catch(err => {
         console.error(err);
-        target.loading = false;
-        target.loadingStatus = '';
+        this.loading = false;
+        this.loadingStatus = '';
         this.$message.error('Failed to create URL: ' + (err && err.message ? err.message : 'unknown error'));
       })
     },
@@ -116,6 +116,11 @@ export default {
             : 'Invalid email address'
         });
         if (!email) {
+          this.pat = '';
+          this.username = '';
+          this.repoName = '';
+          this.discordWebhook = '';
+          this.fs = null;
           target.loading = false;
           return;
         }
@@ -143,6 +148,12 @@ export default {
           this.loading = false;
           this.loadingStatus = '';
           this.$message.error('Failed to read the repository: ' + (err && err.message ? err.message : err));
+          return;
+        }
+        if (!Array.isArray(files)) {
+          this.loading = false;
+          this.loadingStatus = '';
+          this.$message.error('Failed to read the repository: unexpected file list');
           return;
         }
         let promises = [];
@@ -192,6 +203,7 @@ export default {
                 this.renameChapters(noExt);
               },
               onNegativeClick: () => {
+                noExt.forEach(item => this.series.push(item));
                 this.page = this.SERIES_MANAGER_PAGE;
               }
             });
@@ -200,7 +212,8 @@ export default {
           }
           if (!window.localStorage || !window.localStorage.getItem('skipTopics')) {
             GitHubUtils.getTopics(this.repoName, this.username, this.pat).then(value => {
-              let names = value.data.names;
+              let names = value && value.data && Array.isArray(value.data.names) ? value.data.names : null;
+              if (!names) return;
               if (names.indexOf('cubari-source') === -1) {
                 this.$dialog.warning({
                   title: 'Add GitHub topic?',
@@ -242,9 +255,10 @@ export default {
         promises.push(Promise.all([
           this.fs.promises.rename('/' + item.name, '/' + item.name + '.json'),
           GitHubUtils.rename(item.name, item.name + '.json', this.fs)
-        ]));
-        item.name = item.name + '.json'
-        this.series.push(item);
+        ]).then(() => {
+          item.name = item.name + '.json';
+          this.series.push(item);
+        }));
       }
       GitHubUtils.push(GitHubUtils.commit(Promise.all(promises), this.fs, 'Add .json extensions', this.email), this.fs, this.username, this.pat).then(() => {
         target.loading = false;
@@ -267,7 +281,7 @@ export default {
         if (deleted) {
           DiscordWebhook.sendAll(this.discordWebhook, [
             DiscordWebhook.buildSummaryEmbed(deleted.data, 'delete')
-          ]);
+          ]).catch(err => console.error('Discord webhook failed:', err));
         }
       }).catch(async err => {
         console.error(err);
@@ -285,13 +299,13 @@ export default {
             this.$message.warning('Nothing was pushed. Reload the page to pick up the remote changes.');
             return;
           }
-          this.forcePush(() => {
+          await this.forcePush(() => {
             const deleted = this.series.find(s => s.name === fileName);
             this.series = this.series.filter(s => s.name !== fileName);
             if (deleted) {
               DiscordWebhook.sendAll(this.discordWebhook, [
                 DiscordWebhook.buildSummaryEmbed(deleted.data, 'delete')
-              ]);
+              ]).catch(err => console.error('Discord webhook failed:', err));
             }
           }, 'Series deleted with a force push!');
           return;
@@ -307,8 +321,7 @@ export default {
         // Only a genuinely missing file means "new series": every other read
         // failure must not silently open an empty editor that would then
         // overwrite the real file on GitHub.
-        if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR' ||
-            (typeof err.message === 'string' && /ENOENT|ENOTDIR/.test(err.message)))) {
+        if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR')) {
           this.fileName = name;
           this.selectedSeries = new Series(name.replace(/\.json$/i, ''));
           this.page = this.CHAPTER_MANAGER_PAGE;
@@ -331,10 +344,20 @@ export default {
       this.fileName = name;
       this.selectedSeries = series;
       this.page = this.CHAPTER_MANAGER_PAGE;
-      this.dirty = true;
+      this.dirty = false;
       this.originalSeries = JSON.parse(JSON.stringify(series));
     },
-    discardSeries() {
+    async discardSeries() {
+      if (this.dirty) {
+        const ok = await this.$confirm({
+          title: 'Discard changes?',
+          content: 'All unsaved edits to this series will be lost.',
+          positiveText: 'Discard',
+          negativeText: 'Keep editing',
+          type: 'warning'
+        });
+        if (!ok) return;
+      }
       this.page = this.SERIES_MANAGER_PAGE;
       this.dirty = false;
     },
@@ -342,20 +365,8 @@ export default {
       this.loadingStatus = 'Saving ' + name;
       this.loading = true;
       GitHubUtils.addSeries(name, series, this.username, this.pat, this.fs, this.email).then(() => {
-        const diffEntries = this.computeSeriesDiff(this.originalSeries, series);
-        this.rememberSavedSeries(name, series);
-        this.originalSeries = JSON.parse(JSON.stringify(series));
-        this.dirty = false;
+        this.postSaveSeries(name, series);
         this.loading = false;
-        const embeds = [];
-        if (diffEntries) {
-          diffEntries.forEach(entry => {
-            embeds.push(DiscordWebhook.buildEntryEmbed(entry.title, entry.diff, 0x5e6ad2, series));
-          });
-        }
-        // Always include a summary embed with counts.
-        embeds.unshift(DiscordWebhook.buildSummaryEmbed(series, 'save'));
-        DiscordWebhook.sendAll(this.discordWebhook, embeds);
       }).catch(async e => {
         console.log(e);
         this.loading = false;
@@ -373,18 +384,7 @@ export default {
             return;
           }
           this.forcePush(() => {
-            this.rememberSavedSeries(name, series);
-            const diffEntries = this.computeSeriesDiff(this.originalSeries, series);
-            this.originalSeries = JSON.parse(JSON.stringify(series));
-            this.dirty = false;
-            const embeds = [];
-            if (diffEntries) {
-              diffEntries.forEach(entry => {
-                embeds.push(DiscordWebhook.buildEntryEmbed(entry.title, entry.diff, 0x5e6ad2, series));
-              });
-            }
-            embeds.unshift(DiscordWebhook.buildSummaryEmbed(series, 'save'));
-            DiscordWebhook.sendAll(this.discordWebhook, embeds);
+            this.postSaveSeries(name, series);
           }, 'Saved ' + name + ' with a force push!');
           return;
         }
@@ -446,20 +446,30 @@ export default {
           changes.push('- date: ' + (o.last_updated || ''));
           changes.push('+ date: ' + (n.last_updated || ''));
         }
-        const oldPageStr = JSON.stringify(o.groups);
-        const newPageStr = JSON.stringify(n.groups);
-        if (oldPageStr !== newPageStr) {
-          const oldPages = Array.isArray(o.groups) ? o.groups : (o.groups ? Object.values(o.groups).flat() : []);
-          const newPages = Array.isArray(n.groups) ? n.groups : (n.groups ? Object.values(n.groups).flat() : []);
-          const oldSet = new Set(oldPages.map(String));
-          const newSet = new Set(newPages.map(String));
-          const addedCount = newPages.filter(p => !oldSet.has(String(p))).length;
-          const removedCount = oldPages.filter(p => !newSet.has(String(p))).length;
+        const oldPages = Array.isArray(o.groups) ? o.groups : (o.groups ? Object.values(o.groups).flat() : []);
+        const newPages = Array.isArray(n.groups) ? n.groups : (n.groups ? Object.values(n.groups).flat() : []);
+        // Treat empty/blank (and null/undefined) page entries as "no page" so
+        // that chapters with no images don't produce spurious page diffs like
+        // "1 -> 1 (+1 page, -1 page)".
+        const isBlankPage = (p) => {
+          if (p === null || p === undefined) return true;
+          if (typeof p !== 'string') return false;
+          const s = p.trim().toLowerCase();
+          return s === '' || s === 'null' || s === 'undefined';
+        };
+        const oldReal = [...new Set(oldPages.filter(p => !isBlankPage(p)).map(String))];
+        const newReal = [...new Set(newPages.filter(p => !isBlankPage(p)).map(String))];
+        const oldSet = new Set(oldReal);
+        const newSet = new Set(newReal);
+        const addedCount = newReal.filter(p => !oldSet.has(p)).length;
+        const removedCount = oldReal.filter(p => !newSet.has(p)).length;
+        const pagesChanged = oldReal.length !== newReal.length || addedCount > 0 || removedCount > 0;
+        if (pagesChanged) {
           const parts = [];
           if (addedCount > 0) parts.push('+' + addedCount + ' page' + (addedCount === 1 ? '' : 's'));
           if (removedCount > 0) parts.push('-' + removedCount + ' page' + (removedCount === 1 ? '' : 's'));
-          changes.push('- pages: ' + oldPages.length);
-          changes.push('+ pages: ' + newPages.length + (parts.length > 0 ? ' (' + parts.join(', ') + ')' : ''));
+          changes.push('- pages: ' + oldReal.length);
+          changes.push('+ pages: ' + newReal.length + (parts.length > 0 ? ' (' + parts.join(', ') + ')' : ''));
         }
         if (changes.length > 0) {
           entries.push({ title: 'Chapter ' + k, diff: changes.join('\n') });
@@ -486,10 +496,16 @@ export default {
     forcePush(onSuccess, successMessage) {
       this.loadingStatus = 'Force pushing';
       this.loading = true;
-      GitHubUtils.pushForce(this.fs, this.username, this.pat).then(() => {
+      return GitHubUtils.pushForce(this.fs, this.username, this.pat).then(() => {
         this.loading = false;
         this.loadingStatus = '';
-        if (onSuccess) onSuccess();
+        if (onSuccess) {
+          try {
+            onSuccess();
+          } catch (e) {
+            console.error(e);
+          }
+        }
         this.$message.success(successMessage);
       }).catch(err => {
         console.error(err);
@@ -497,6 +513,21 @@ export default {
         this.loadingStatus = '';
         this.$message.error('Force push failed: ' + (err && err.message ? err.message : 'unknown error'));
       });
+    },
+    postSaveSeries(name, series) {
+      const diffEntries = this.computeSeriesDiff(this.originalSeries, series);
+      this.rememberSavedSeries(name, series);
+      this.originalSeries = JSON.parse(JSON.stringify(series));
+      this.dirty = false;
+      const embeds = [];
+      if (diffEntries) {
+        diffEntries.forEach(entry => {
+          embeds.push(DiscordWebhook.buildEntryEmbed(entry.title, entry.diff, 0x5e6ad2, series));
+        });
+      }
+      // Always include a summary embed with counts.
+      embeds.unshift(DiscordWebhook.buildSummaryEmbed(series, 'save'));
+      DiscordWebhook.sendAll(this.discordWebhook, embeds).catch(err => console.error('Discord webhook failed:', err));
     },
     goToChapter(key, chapter) {
       this.chapterKey = key;
@@ -509,7 +540,7 @@ export default {
           chapter.last_updated,
           JSON.parse(JSON.stringify(chapter.groups || {}))
         )
-        : chapter;
+        : null;
       this.page = this.CHAPTER_EDITOR_PAGE;
       this.dirty = true;
     },
@@ -522,7 +553,6 @@ export default {
       this.selectedSeries.chapters[key] = chapter;
       this.page = this.CHAPTER_MANAGER_PAGE;
       this.restoreChapterScroll();
-      this.dirty = false;
     },
     // Remember where the chapter table was when opening the editor: the list
     // is recreated on every page switch, so the document otherwise restarts
@@ -541,7 +571,8 @@ export default {
         return;
       }
       this.$nextTick(() => {
-        let top = saved.tableTop === null ? 0 : this.chapterTableTop() - saved.tableTop;
+        const currentTop = this.chapterTableTop();
+        let top = saved.tableTop === null || currentTop === null ? 0 : currentTop - saved.tableTop;
         window.scrollTo(saved.x, Math.max(0, Math.min(saved.y + top, this.maxScrollY())));
       });
     },
@@ -556,7 +587,7 @@ export default {
       return Math.max(0, (doc.scrollHeight || 0) - window.innerHeight);
     },
     onBeforeUnload(event) {
-      if (this.dirty || this.page === this.CHAPTER_MANAGER_PAGE || this.page === this.CHAPTER_EDITOR_PAGE) {
+      if (this.dirty) {
         event.preventDefault();
         event.returnValue = '';
       }
@@ -594,31 +625,12 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('beforeunload', this.onBeforeUnload);
-  },
-  beforeUnmount() {
-    window.removeEventListener('beforeunload', this.onBeforeUnload);
     if (this.loadingTimer) {
       clearTimeout(this.loadingTimer);
       this.loadingTimer = null;
     }
   },
-  watch: {
-    loading(value) {
-      if (this.loadingTimer) {
-        clearTimeout(this.loadingTimer);
-        this.loadingTimer = null;
-      }
-      if (value) {
-        this.loadingTimer = setTimeout(() => {
-          if (this.loading) {
-            this.loading = false;
-            this.loadingStatus = '';
-            this.$message.warning('The operation took too long and was cancelled. Try again.');
-          }
-        }, 60000);
-      }
-    }
-  },
+
   data: function () {
     return {
       HOME_PAGE: 'home',
