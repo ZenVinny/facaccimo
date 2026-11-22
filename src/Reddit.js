@@ -45,7 +45,8 @@ function galleryImages(post) {
       continue;
     }
     if (data.s && isHttpUrl(data.s.u)) {
-      images.push(decodeHtml(data.s.u));
+      const u = data.s.u.startsWith('//') ? 'https:' + data.s.u : data.s.u;
+      images.push(decodeHtml(u));
       continue;
     }
     const mime = typeof data.m === 'string' ? data.m : '';
@@ -66,8 +67,10 @@ function fallbackImage(post) {
     preview && preview.source && preview.source.url
   ];
   for (const candidate of candidates) {
-    if (isHttpUrl(candidate) && IMAGE_EXT_REGEX.test(candidate)) {
-      return decodeHtml(candidate);
+    const decoded = decodeHtml(candidate);
+    const normalized = decoded.startsWith('//') ? 'https:' + decoded : decoded;
+    if (isHttpUrl(normalized) && IMAGE_EXT_REGEX.test(normalized)) {
+      return normalized;
     }
   }
   return null;
@@ -84,9 +87,7 @@ export default class Reddit {
   static getImgArray(url) {
     const lines = splitLines(url);
     return Promise.allSettled(lines.map(value => {
-      return CorsProxy.get(toJsonUrl(value), {
-        'User-Agent': USER_AGENT
-      }).then(response => {
+      return CorsProxy.get(toJsonUrl(value)).then(response => {
         if (!response.ok) {
           throw new Error('Reddit returned HTTP ' + response.status);
         }

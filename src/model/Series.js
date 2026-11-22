@@ -18,6 +18,7 @@ export default class Series {
   }
 
   static fromJson(o) {
+    if (!o) return new Series();
     return new Series(o.title, o.description, o.artist, o.author, o.cover, Chapter.fromJson(o.chapters))
   }
 }

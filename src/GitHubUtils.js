@@ -6,7 +6,6 @@ import Requestable from "github-api/dist/components/Requestable";
 import CorsProxy from "./CorsProxy";
 
 // Simple flag for testing
-const DRY_RUN = false;
 
 // Rejections can be non-Error values or Errors without a message string.
 function errorMessage(err) {
@@ -58,31 +57,31 @@ export default class GitHubUtils {
     static getEmail(username, pat) {
         let gh = this.createGH(username, pat);
         return gh.getUser().getEmails().then(value => {
-            for (const email of value.data) {
-                if (email.primary) {
+            const data = (value && value.data) || [];
+            for (const email of data) {
+                if (email && email.primary) {
                     return email.email;
                 }
             }
-            return value.data[0].email;
+            return data.length ? data[0].email : '';
         });
     }
 
-    static createRepo(username, pat, repoName) {
+    static createRepo(username, pat, repoName, isPrivate = false) {
         let gh = this.createGH(username, pat);
         return gh.getUser().createRepo({
             name: repoName,
+            private: isPrivate,
             description: 'Automatically created repository for cubari.moe'
         });
     }
 
     static cloneRepo(fullName) {
-        const fs = new LightningFS('fs', { wipe: true });
+        const fs = new LightningFS('fs-' + Date.now(), { wipe: true });
         return git.clone({
             fs: fs,
             http: http,
-            dir: '/',
-            corsProxy: CorsProxy.getProxyUrl(),
-            url: 'https://github.com/' + fullName
+            url: 'https://github.com/' + String(fullName || '').split('/').map(encodeURIComponent).join('/')
         })
             .then(() => {
                 return fs;
@@ -134,13 +133,7 @@ export default class GitHubUtils {
     }
 
     static push(promise, fs, username, pat) {
-        if (DRY_RUN) {
-            return promise.then(() => {
-                console.log('Not pushing, because DRY_RUN');
-            })
-        } else {
-            return promise.then(() => GitHubUtils.pushOnly(fs, username, pat));
-        }
+        return promise.then(() => GitHubUtils.pushOnly(fs, username, pat));
     }
 
     static pushOnly(fs, username, pat, force = false) {
@@ -178,6 +171,9 @@ export default class GitHubUtils {
     }
 
     static addSeries(name, series, username, pat, fs, email) {
+        if (typeof name !== 'string' || !name || /[\\\/]/.test(name) || name === '.' || name === '..') {
+            return Promise.reject(new Error('Invalid series file name'));
+        }
         return this.push(
             this.commit(
                 fs.promises.writeFile('/' + name, JSON.stringify(series, null, 2))
@@ -192,6 +188,9 @@ export default class GitHubUtils {
     }
 
     static deleteSeries(name, username, pat, fs, email) {
+        if (typeof name !== 'string' || !name || /[\\\/]/.test(name) || name === '.' || name === '..') {
+            return Promise.reject(new Error('Invalid series file name'));
+        }
         return this.push(
             this.commit(
                 fs.promises.unlink('/' + name, {})
@@ -205,19 +204,12 @@ export default class GitHubUtils {
             fs, username, pat);
     }
 
-    static rename(oldName, newName, fs) {
-        return Promise.all([
-            git.remove({
-                fs: fs,
-                dir: '/',
-                filepath: oldName
-            }),
-            git.add({
-                fs: fs,
-                dir: '/',
-                filepath: newName
-            })
-        ]);
+    static async rename(oldName, newName, fs) {
+        const data = await fs.promises.readFile('/' + oldName);
+        await fs.promises.writeFile('/' + newName, data);
+        await fs.promises.unlink('/' + oldName);
+        await git.remove({ fs: fs, dir: '/', filepath: oldName });
+        await git.add({ fs: fs, dir: '/', filepath: newName });
     }
 
     static getCurrentBranch(repo, fs) {
@@ -228,13 +220,13 @@ export default class GitHubUtils {
     }
 
     static getSeriesUrl(name, branch, repo) {
-        return 'https://raw.githubusercontent.com/' + repo + '/' + branch + '/' + name;
+        return 'https://raw.githubusercontent.com/' + encodeURIComponent(repo) + '/' + encodeURIComponent(branch) + '/' + encodeURIComponent(name);
     }
 
     static getBase64EncodedSlug(rawGithubUrl) {
         const url = new URL(rawGithubUrl);
         // Base64 URL-encoded with no padding
-        return btoa(url.host.split(".")[0] + url.pathname)
+        return btoa(unescape(encodeURIComponent(url.host.split('.')[0] + url.pathname)))
             .replace(/\+/g, "-")
             .replace(/\//g, "_")
             .replace(/=/g, "");

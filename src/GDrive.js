@@ -23,7 +23,7 @@ function toDownloadUrls(values, regex) {
     if (!exec) {
       throw new Error('Not a Google Drive file URL: ' + value);
     }
-    return DOWNLOAD_URL + exec[1];
+    return DOWNLOAD_URL + exec[1] + '&export=download';
   });
 }
 

@@ -107,6 +107,7 @@ export function prompt(options = {}) {
     defaultValue = '',
     positiveText = 'OK',
     negativeText = 'Cancel',
+    required = true,
     validate = null
   } = options
 
@@ -124,7 +125,7 @@ export function prompt(options = {}) {
 
     const submit = () => {
       const value = state.value.trim()
-      if (!value) {
+      if (!value && required) {
         state.error = 'This field is required'
         return false
       }
@@ -227,6 +228,10 @@ export function promptPair(options = {}) {
     }
 
     const submit = () => {
+      if (fields.length === 0) {
+        finish(null)
+        return true
+      }
       const values = {}
       for (const field of fields) {
         const raw = String(state.values[field.key] ?? '').trim()
@@ -278,8 +283,9 @@ async function copyToClipboard(text) {
   } catch (e) {
     // fall through to the legacy path
   }
+  let area;
   try {
-    const area = document.createElement('textarea')
+    area = document.createElement('textarea')
     area.value = text
     area.setAttribute('readonly', '')
     area.style.position = 'fixed'
@@ -287,11 +293,13 @@ async function copyToClipboard(text) {
     area.style.opacity = '0'
     document.body.appendChild(area)
     area.select()
-    const ok = document.execCommand('copy')
-    document.body.removeChild(area)
-    return ok
+    return document.execCommand('copy')
   } catch (e) {
     return false
+  } finally {
+    if (area && area.parentNode) {
+      area.parentNode.removeChild(area)
+    }
   }
 }
 
@@ -310,18 +318,20 @@ export function linkDialog(options = {}) {
   const LinkBody = {
     props: { text: String, url: String },
     setup(props) {
+      const safeUrl = /^https?:\/\//i.test(props.url) ? props.url : null;
       return () => h('div', { class: 'hx-dialog' }, [
         props.text
           ? h('p', { class: 'hx-dialog-msg' }, props.text)
           : null,
-        // The field itself is the link: clickable, single line, scrolls sideways.
-        h('a', {
-          class: 'hx-link-field',
-          href: props.url,
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          title: props.url
-        }, props.url)
+        safeUrl
+          ? h('a', {
+              class: 'hx-link-field',
+              href: safeUrl,
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              title: safeUrl
+            }, safeUrl)
+          : h('span', { class: 'hx-link-field' }, props.url)
       ])
     }
   }

@@ -184,7 +184,7 @@ hr { background-color: var(--hair); border: none; display: block; height: 1px; m
 .buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .card-header .buttons { margin-left: auto; }
 .has-text-right { text-align: right; }
-.has-text-right:has(> .btn-primary) {
+.has-text-right {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;

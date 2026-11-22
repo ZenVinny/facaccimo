@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="modal-overlay" v-if="isImporting" @click.self="isImporting = false">
+    <div class="modal-overlay" v-if="isImporting" role="dialog" aria-modal="true" @click.self="isImporting = false">
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Import</p>
@@ -139,7 +139,11 @@ export default {
     this.originalGroupName = Groups.getGroupName(this.chapter.groups);
     this.datetime = this.chapter.getLastUpdated();
     // Convert to datetime-local format
-    const d = this.datetime;
+    let d = this.datetime;
+    if (!(d instanceof Date) || isNaN(d.getTime())) {
+      d = new Date();
+    }
+    this.datetime = d;
     const pad = n => String(n).padStart(2, '0');
     this.datetimeLocal = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
     this.originalDatetimeLocal = this.datetimeLocal;

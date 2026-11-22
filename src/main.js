@@ -6,12 +6,9 @@ import naive from 'naive-ui'
 import { message, dialog, loadingBar, prompt, promptPair, confirmAction, linkDialog } from './ui'
 
 // Tools like @isomorphic-git/lightning-fs read Buffer off the window object.
-if (typeof window !== 'undefined' && !window.Buffer) {
-  window.Buffer = Buffer
-}
-// A few of their browser builds still reference the `global` object.
-if (typeof window !== 'undefined' && !window.global) {
-  window.global = window
+if (typeof window !== 'undefined') {
+  window.Buffer = Buffer;
+  window.global = window;
 }
 
 const app = createApp(App)

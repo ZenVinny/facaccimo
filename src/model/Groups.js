@@ -8,7 +8,7 @@ export default class Groups {
 
     static getImagesGroup(groupName, urls) {
         let result = {};
-        result[groupName] = urls.split('\n');
+        result[groupName] = String(urls ?? '').split('\n');
         return result;
     }
 
@@ -21,19 +21,26 @@ export default class Groups {
     }
 
     static getGroupName(groups) {
-        return Object.keys(groups)[0] ?? '';
+        if (!groups) return '';
+        const keys = Object.keys(groups);
+        return keys.length ? keys[0] : '';
     }
 
     static isProxy(groups) {
-        return typeof (groups[this.getGroupName(groups)] ?? []) === "string";
+        if (!groups) return false;
+        const name = this.getGroupName(groups);
+        const value = groups[name];
+        return typeof (value ?? []) === "string";
     }
 
     static getPages(groups) {
-        let imgs = groups[this.getGroupName(groups)] ?? [];
+        if (!groups) return '';
+        const name = this.getGroupName(groups);
+        const imgs = groups[name] ?? [];
         if (typeof imgs === "string") {
             return imgs;
         }
-        return imgs.join('\n');
+        return Array.isArray(imgs) ? imgs.join('\n') : String(imgs ?? '');
     }
 
 }

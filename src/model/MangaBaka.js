@@ -43,7 +43,7 @@ export default class MangaBaka {
 
   // Primary English title, falling back to any English title, then any primary one.
   static title(series) {
-    const titles = series.titles || [];
+    const titles = Array.isArray(series.titles) ? series.titles : [];
     const match = titles.find(t => t.language === 'en' && t.is_primary)
         || titles.find(t => t.language === 'en')
         || titles.find(t => t.is_primary)
@@ -52,7 +52,7 @@ export default class MangaBaka {
   }
 
   static tags(series) {
-    return (series.tags || [])
+    return (Array.isArray(series.tags) ? series.tags : [])
         .filter(tag => tag && tag.name && !tag.is_spoiler)
         .sort((a, b) => {
           const wa = WEIGHT_ORDER[a.weight] === undefined ? 1 : WEIGHT_ORDER[a.weight];

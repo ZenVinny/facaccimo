@@ -29,7 +29,9 @@ export default class MangaDex {
       const body = await response.json();
       const data = body.data || [];
       all.push(...data);
-      total = body.total || 0;
+      if (typeof body.total === 'number') {
+        total = body.total;
+      }
       offset += data.length;
       if (data.length === 0) break;
     }
@@ -38,7 +40,7 @@ export default class MangaDex {
     for (const ch of all) {
       const attr = ch.attributes;
       const num = attr.chapter;
-      if (!num) continue;
+      if (num === null || num === undefined || num === '') continue;
       if (!byNumber[num]) {
         byNumber[num] = ch;
       } else if (attr.translatedLanguage === 'en' && byNumber[num].attributes.translatedLanguage !== 'en') {
@@ -50,7 +52,10 @@ export default class MangaDex {
       const publishAt = attr.publishAt || attr.readableAt || '';
       let lastUpdated = '';
       if (publishAt) {
-        lastUpdated = Math.floor(new Date(publishAt).getTime() / 1000) + '';
+        const t = new Date(publishAt).getTime();
+        if (Number.isFinite(t)) {
+          lastUpdated = Math.floor(t / 1000) + '';
+        }
       }
       return {
         number: attr.chapter,

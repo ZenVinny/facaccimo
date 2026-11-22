@@ -9,11 +9,13 @@ export default class CorsProxy {
     static get(url, headers, options) {
         if (url.startsWith('https://')) {
             url = url.replace('https://', '');
+        } else if (url.startsWith('http://')) {
+            url = url.replace('http://', '');
         }
         const timeoutMs = (options && options.timeoutMs) || CorsProxy.TIMEOUT_MS;
         const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
         const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
-        return fetch(CorsProxy.getProxyUrl() + '/' + url, {
+        return fetch(CorsProxy.getProxyUrl() + '/' + encodeURIComponent(url), {
             headers: headers,
             signal: controller ? controller.signal : undefined
         }).then(response => {
@@ -34,7 +36,7 @@ export default class CorsProxy {
     }
 
     static getProxyUrl() {
-        if (process.env.NODE_ENV === 'development') {
+        if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
             return CorsProxy.DEV_URL;
         }
         return CorsProxy.URL;

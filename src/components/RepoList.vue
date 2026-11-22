@@ -41,7 +41,7 @@ export default {
       if (!this.showDropdown) return [];
       return this.repos.filter(option => {
         return (
-          option.full_name
+          String(option.full_name ?? '')
             .toString()
             .toLowerCase()
             .indexOf(this.repo.toLowerCase()) >= 0
@@ -60,17 +60,29 @@ export default {
     }
   },
   beforeMount() {
-    let target = this;
     GitHubUtils.getAllRepos(this.username, this.pat).then(repos => {
-      target.repos = repos;
-      target.loading = false;
-      if (repos.length === 0) {
+      this.repos = Array.isArray(repos) ? repos : [];
+      this.loading = false;
+      if (this.repos.length === 0) {
         this.$message.warning('No repositories found for this account.');
       }
     }).catch(error => {
-      target.loading = false;
+      this.loading = false;
       this.$message.error('Failed to load repositories: ' + (error && error.message ? error.message : 'unknown error'));
     });
+  },
+  mounted() {
+    this._outsideClick = (e) => {
+      if (this.showDropdown && this.$el && !this.$el.contains(e.target)) {
+        this.showDropdown = false;
+      }
+    };
+    document.addEventListener('click', this._outsideClick);
+  },
+  beforeUnmount() {
+    if (this._outsideClick) {
+      document.removeEventListener('click', this._outsideClick);
+    }
   }
 }
 </script>

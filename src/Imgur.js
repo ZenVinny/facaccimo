@@ -5,9 +5,8 @@ const CLIENT_ID = 'd70305e7c3ac5c6';
 
 export default class Imgur {
   static isImgurUrl(url) {
-    return url.split('\n').every(value => {
-      return URL_REGEX.test(value)
-    })
+    const lines = String(url || '').split('\n').map(s => s.trim()).filter(Boolean);
+    return lines.length > 0 && lines.every(value => URL_REGEX.test(value));
   }
 
   static getAlbumId(url) {
@@ -18,12 +17,16 @@ export default class Imgur {
     // Newer imgur URLs may contain a title slug (imgur.com/a/some-title-PNBfVYP),
     // the actual album ID is the last dash-separated segment
     let parts = exec[1].split('-');
-    return parts[parts.length - 1];
+    let id = parts[parts.length - 1];
+    if (!/^[a-zA-Z0-9]+$/.test(id)) {
+      return null;
+    }
+    return id;
   }
 
   static getImgArray(url) {
-    let urls = url.split('\n');
-    return Promise.all(urls.map(u => {
+    let urls = String(url || '').split('\n').map(s => s.trim()).filter(Boolean);
+    return Promise.allSettled(urls.map(u => {
       let id = Imgur.getAlbumId(u);
       return CorsProxy.get('https://api.imgur.com/post/v1/albums/' + id + '?client_id=' + CLIENT_ID + '&include=media%2Cadconfig%2Caccount%2Ctags')
           .then(value => {
@@ -38,6 +41,13 @@ export default class Imgur {
             }
             return value.media.map(item => item.url);
           });
-    })).then(arrays => arrays.flat());
+    })).then(results => {
+      const fulfilled = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+      const rejected = results.filter(r => r.status === 'rejected');
+      if (rejected.length > 0 && fulfilled.length === 0) {
+        throw rejected[0].reason;
+      }
+      return fulfilled.flat();
+    });
   }
 }
