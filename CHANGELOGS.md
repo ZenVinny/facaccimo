@@ -1,5 +1,14 @@
 # Changelog
 
+11.22.2026 — Normalized whitespace in new series filenames (src/pages/SeriesManager.vue)
+11.22.2026 — Guarded chapterCount/volumeCount against missing data (src/pages/SeriesManager.vue)
+11.22.2026 — Added caption and scope to the series table (src/pages/SeriesManager.vue)
+11.22.2026 — Guarded cover thumbnail fetches against modal close (src/pages/ChapterManager.vue)
+11.22.2026 — Made MangaBaka metadata import fill description only when empty (src/pages/ChapterManager.vue)
+11.22.2026 — Added dialog semantics to ChapterManager modals (src/pages/ChapterManager.vue)
+11.22.2026 — Coerced volume input to avoid null values (src/pages/ChapterEditor.vue)
+11.22.2026 — Guarded Imgur import against empty results (src/pages/ChapterEditor.vue)
+11.22.2026 — Added isProxy watch to convert proxy URLs on toggle (src/pages/ChapterEditor.vue)
 11.22.2026 — Fixed compareChapterNames to use a total order (numeric then lexical) (src/pages/ChapterManager.vue)
 11.22.2026 — Guarded row rendering against missing chapter entries (src/pages/ChapterManager.vue)
 11.22.2026 — Made editChapter derive defaults from the highest sorted chapter (src/pages/ChapterManager.vue)

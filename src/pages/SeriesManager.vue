@@ -15,11 +15,12 @@
     </div>
 
     <table class="list">
+      <caption class="sr-only">Series list</caption>
       <thead>
         <tr>
-          <th>Name</th>
-          <th class="num">Chapters<small>volumes</small></th>
-          <th class="acts-col">&nbsp;</th>
+          <th scope="col">Name</th>
+          <th class="num" scope="col">Chapters<small>volumes</small></th>
+          <th class="acts-col" scope="col">&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -91,12 +92,14 @@ export default {
   },
   methods: {
     chapterCount(item) {
-      return Object.keys(item.data.chapters || {}).length;
+      const chapters = (item && item.data && item.data.chapters) || {};
+      return Object.keys(chapters).length;
     },
     volumeCount(item) {
+      const chapters = (item && item.data && item.data.chapters) || {};
       const volumes = new Set();
-      for (const key of Object.keys(item.data.chapters || {})) {
-        const volume = String(item.data.chapters[key].volume ?? "").trim();
+      for (const key of Object.keys(chapters)) {
+        const volume = String((chapters[key] && chapters[key].volume) ?? "").trim();
         if (volume) {
           volumes.add(volume);
         }
@@ -128,7 +131,7 @@ export default {
       }
     },
     goToSeries(name) {
-      name = String(name || "").replace(/\s+/g, "");
+      name = String(name || "").trim().replace(/\s+/g, "-");
       if (!name) {
         this.$message.warning('File name cannot be empty');
         return;

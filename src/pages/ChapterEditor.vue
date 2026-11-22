@@ -56,7 +56,7 @@
                   <div class="field" style="flex: 1;">
                     <label class="label">Volume</label>
                     <div class="control">
-                      <input class="input" type="number" v-model="chapter.volume">
+                      <input class="input" type="number" v-model="chapter.volume" @input="if (chapter.volume === null) chapter.volume = ''">
                     </div>
                   </div>
                   <div class="field" style="flex: 1;">
@@ -143,6 +143,11 @@ export default {
     const pad = n => String(n).padStart(2, '0');
     this.datetimeLocal = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
     this.originalDatetimeLocal = this.datetimeLocal;
+  },
+  watch: {
+    isProxy() {
+      this.onProxyUrlChange();
+    }
   },
   methods: {
     async discard() {
@@ -248,6 +253,10 @@ export default {
         this.isImporting = false;
         this.$emit('loading', 'Getting data from Imgur');
         Imgur.getImgArray(urls).then(value => {
+          if (!value || value.length === 0) {
+            this.$emit('loaded');
+            return;
+          }
           this.pages += (this.pages.length === 0 ? '' : '\n') + value.join('\n');
           this.$emit('loaded');
         })

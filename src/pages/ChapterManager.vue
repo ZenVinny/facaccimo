@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- MangaBaka modal -->
-    <div v-if="isSearching" class="modal-overlay" @click.self="isSearching = false">
+    <div v-if="isSearching" class="modal-overlay" role="dialog" aria-modal="true" @click.self="isSearching = false">
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">MangaBaka · {{ mbQuery }}<span v-if="mbTotal" class="mb-total"> ({{ mbTotal }} total)</span></p>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- MangaDex modal -->
-    <div v-if="isCoverSearching" class="modal-overlay" @click.self="closeCoverSearch">
+    <div v-if="isCoverSearching" class="modal-overlay" role="dialog" aria-modal="true" @click.self="closeCoverSearch">
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">MangaDex {{ mdMode === 'chapters' ? 'chapters' : 'covers' }} · {{ mdQuery }}</p>
@@ -259,7 +259,9 @@ export default {
             if (authors) {
               this.series.author = authors;
             }
-            this.series.description = MangaBaka.applyMeta(series.description, MangaBaka.tags(series), series.status);
+            if (!this.series.description) {
+              this.series.description = MangaBaka.applyMeta(series.description, MangaBaka.tags(series), series.status);
+            }
             this.isSearching = false;
             this.$message.success('Metadata imported from MangaBaka!');
           })
@@ -296,6 +298,10 @@ export default {
                     })
                     .then(blob => {
                       const url = URL.createObjectURL(blob);
+                      if (!this.isCoverSearching) {
+                        URL.revokeObjectURL(url);
+                        return;
+                      }
                       this.mdCoverUrls[result.id] = url;
                     })
                     .catch(() => { /* leave placeholder */ });
