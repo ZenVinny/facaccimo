@@ -149,7 +149,12 @@ export default {
       this.onProxyUrlChange();
     }
   },
-  methods: {\n    coerceVolume() {\n      if (this.chapter && this.chapter.volume === null) {\n        this.chapter.volume = '';\n      }\n    },
+  methods: {
+    coerceVolume() {
+      if (this.chapter && this.chapter.volume === null) {
+        this.chapter.volume = '';
+      }
+    },
     async discard() {
       const ok = await this.$confirm({
         title: 'Discard changes?',
