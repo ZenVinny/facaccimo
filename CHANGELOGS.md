@@ -1,5 +1,7 @@
 # Changelog
 
+11.22.2026 — Removed duplicated Series list caption and repository name (src/pages/SeriesManager.vue, src/App.vue)
+11.22.2026 — Restored missing dir/corsProxy in cloneRepo (src/GitHubUtils.js)
 11.22.2026 — Fixed Imgur and ui.js syntax errors (src/Imgur.js, src/ui.js)
 11.22.2026 — Fixed linkDialog XSS and copyToClipboard cleanup (src/ui.js)
 11.22.2026 — Made prompt/promptPair handle optional and empty fields (src/ui.js)

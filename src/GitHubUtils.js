@@ -81,6 +81,8 @@ export default class GitHubUtils {
         return git.clone({
             fs: fs,
             http: http,
+            dir: '/',
+            corsProxy: CorsProxy.getProxyUrl(),
             url: 'https://github.com/' + String(fullName || '').split('/').map(encodeURIComponent).join('/')
         })
             .then(() => {

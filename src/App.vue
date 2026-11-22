@@ -70,7 +70,7 @@ export default {
         return 'Easy cubari.moe sources, straight from your repository.';
       }
       if (this.page === this.SERIES_MANAGER_PAGE) {
-        return this.repoName || '';
+        return '';
       }
       return this.fileName || '';
     }

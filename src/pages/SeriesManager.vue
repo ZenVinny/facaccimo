@@ -15,7 +15,6 @@
     </div>
 
     <table class="list">
-      <caption class="sr-only">Series list</caption>
       <thead>
         <tr>
           <th scope="col">Name</th>
