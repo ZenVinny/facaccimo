@@ -56,7 +56,7 @@
                   <div class="field" style="flex: 1;">
                     <label class="label">Volume</label>
                     <div class="control">
-                      <input class="input" type="number" v-model="chapter.volume" @input="if (chapter.volume === null) chapter.volume = ''">
+                      <input class="input" type="number" v-model="chapter.volume" @input="coerceVolume">
                     </div>
                   </div>
                   <div class="field" style="flex: 1;">
@@ -149,7 +149,7 @@ export default {
       this.onProxyUrlChange();
     }
   },
-  methods: {
+  methods: {\n    coerceVolume() {\n      if (this.chapter && this.chapter.volume === null) {\n        this.chapter.volume = '';\n      }\n    },
     async discard() {
       const ok = await this.$confirm({
         title: 'Discard changes?',

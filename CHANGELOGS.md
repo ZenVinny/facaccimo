@@ -1,5 +1,6 @@
 # Changelog
 
+11.22.2026 — Fixed volume input handler syntax (src/pages/ChapterEditor.vue)
 11.22.2026 — Normalized whitespace in new series filenames (src/pages/SeriesManager.vue)
 11.22.2026 — Guarded chapterCount/volumeCount against missing data (src/pages/SeriesManager.vue)
 11.22.2026 — Added caption and scope to the series table (src/pages/SeriesManager.vue)
