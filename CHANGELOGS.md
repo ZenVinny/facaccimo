@@ -1,5 +1,6 @@
 # Changelog
 
+11.22.2026 — Fixed mktemp path to use $HOME (start.sh)
 11.22.2026 — Disabled lint-on-save to speed up builds (vue.config.js)
 11.22.2026 — Disabled vue/no-mutating-props in templates (src/pages/ChapterEditor.vue, src/pages/ChapterManager.vue)
 11.22.2026 — Disabled lint in prop-mutating Vue files (src/pages/ChapterEditor.vue, src/pages/ChapterManager.vue)
