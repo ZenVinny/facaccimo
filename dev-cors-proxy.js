@@ -118,6 +118,7 @@ const server = http.createServer((req, res) => {
   });
 
   req.pipe(proxyReq);
+});
 server.maxConnections = 20;
 server.listen(PORT, '127.0.0.1', () => {
   console.log('CORS proxy listening on http://localhost:' + PORT);
