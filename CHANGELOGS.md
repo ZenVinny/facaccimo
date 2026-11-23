@@ -1,5 +1,6 @@
 # Changelog
 
+11.22.2026 — Stopped stripping Authorization header in dev proxy to fix pushes (dev-cors-proxy.js)
 11.22.2026 — Fixed dev-cors-proxy syntax (missing closing brace)
 11.22.2026 — Fixed mktemp path to use $HOME (start.sh)
 11.22.2026 — Disabled lint-on-save to speed up builds (vue.config.js)

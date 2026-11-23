@@ -8,7 +8,7 @@ const https = require('https');
 
 const PORT = process.env.PORT || 3000;
 
-const STRIP_REQUEST_HEADERS = ['host', 'origin', 'referer', 'connection', 'cookie', 'authorization', 'proxy-authorization'];
+const STRIP_REQUEST_HEADERS = ['host', 'origin', 'referer', 'connection'];
 const STRIP_RESPONSE_HEADERS = ['connection', 'transfer-encoding', 'access-control-allow-origin'];
 // Give up on an upstream that never answers instead of hanging the page.
 const UPSTREAM_TIMEOUT_MS = Number(process.env.UPSTREAM_TIMEOUT_MS || 30000);
