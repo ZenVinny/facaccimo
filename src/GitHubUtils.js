@@ -173,7 +173,7 @@ export default class GitHubUtils {
     }
 
     static addSeries(name, series, username, pat, fs, email) {
-        if (typeof name !== 'string' || !name || /[\\\/]/.test(name) || name === '.' || name === '..') {
+        if (typeof name !== 'string' || !name || /[\\/]/.test(name) || name === '.' || name === '..') {
             return Promise.reject(new Error('Invalid series file name'));
         }
         return this.push(
@@ -190,7 +190,7 @@ export default class GitHubUtils {
     }
 
     static deleteSeries(name, username, pat, fs, email) {
-        if (typeof name !== 'string' || !name || /[\\\/]/.test(name) || name === '.' || name === '..') {
+        if (typeof name !== 'string' || !name || /[\\/]/.test(name) || name === '.' || name === '..') {
             return Promise.reject(new Error('Invalid series file name'));
         }
         return this.push(

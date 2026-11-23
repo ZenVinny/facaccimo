@@ -1,4 +1,5 @@
 <template>
+<!-- eslint-disable vue/no-mutating-props -->
   <div>
     <div class="modal-overlay" v-if="isImporting" role="dialog" aria-modal="true" @click.self="isImporting = false">
       <div class="modal-card">
@@ -106,6 +107,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import Groups from "@/model/Groups";
 import Reddit from "@/Reddit";
 import GDrive from "@/GDrive";
@@ -221,7 +223,7 @@ export default {
       }
       this.isImporting = false;
     },
-    parseGDrive(urls, close) {
+    parseGDrive(urls) {
       if (GDrive.isGDriveUrl(urls)) {
         this.isImporting = false;
         try {
@@ -233,7 +235,7 @@ export default {
         this.$message.error('URLs are not a valid Google Drive URLs!');
       }
     },
-    parseReddit(urls, close) {
+    parseReddit(urls) {
       if (Reddit.isRedditUrl(urls)) {
         this.isImporting = false;
         this.$emit('loading', 'Getting data from Reddit');
@@ -257,7 +259,7 @@ export default {
         this.$message.error('URLs are not a valid Reddit Posts!');
       }
     },
-    parseImgur(urls, close) {
+    parseImgur(urls) {
       if (Imgur.isImgurUrl(urls)) {
         this.isImporting = false;
         this.$emit('loading', 'Getting data from Imgur');

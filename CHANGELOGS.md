@@ -1,5 +1,16 @@
 # Changelog
 
+11.22.2026 — Disabled lint-on-save to speed up builds (vue.config.js)
+11.22.2026 — Disabled vue/no-mutating-props in templates (src/pages/ChapterEditor.vue, src/pages/ChapterManager.vue)
+11.22.2026 — Disabled lint in prop-mutating Vue files (src/pages/ChapterEditor.vue, src/pages/ChapterManager.vue)
+11.22.2026 — Removed global naive-ui registration to reduce bundle scope (src/main.js)
+11.22.2026 — Cleaned up lint warnings (src/GitHubUtils.js, src/Reddit.js, src/pages/*.vue)
+11.22.2026 — Hardened dev CORS proxy (SSRF, headers, CORS, hostname, limits) (dev-cors-proxy.js)
+11.22.2026 — Made start.sh cleanup, logging, startup, and OpenSSL conditional (start.sh)
+11.22.2026 — Fixed npm scripts and added engines field (package.json)
+11.22.2026 — Removed unused cors-proxy devDependency (package.json)
+11.22.2026 — Added lang and CSP to index.html (public/index.html)
+11.22.2026 — Enabled linting in dev (vue.config.js)
 11.22.2026 — Removed duplicated Series list caption and repository name (src/pages/SeriesManager.vue, src/App.vue)
 11.22.2026 — Restored missing dir/corsProxy in cloneRepo (src/GitHubUtils.js)
 11.22.2026 — Fixed Imgur and ui.js syntax errors (src/Imgur.js, src/ui.js)

@@ -2,7 +2,6 @@ import CorsProxy from "./CorsProxy";
 
 const URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/[^/\s]+\/comments\/[a-z0-9]+\/[a-z0-9_-]+\/?$/i;
 const IMAGE_EXT_REGEX = /\.(?:jpe?g|png|gif|webp)(?:\?.*)?$/i;
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36';
 
 function splitLines(value) {
   return String(value ?? '')

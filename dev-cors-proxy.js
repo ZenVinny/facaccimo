@@ -8,17 +8,17 @@ const https = require('https');
 
 const PORT = process.env.PORT || 3000;
 
-const STRIP_REQUEST_HEADERS = ['host', 'origin', 'referer', 'connection'];
+const STRIP_REQUEST_HEADERS = ['host', 'origin', 'referer', 'connection', 'cookie', 'authorization', 'proxy-authorization'];
 const STRIP_RESPONSE_HEADERS = ['connection', 'transfer-encoding', 'access-control-allow-origin'];
 // Give up on an upstream that never answers instead of hanging the page.
 const UPSTREAM_TIMEOUT_MS = Number(process.env.UPSTREAM_TIMEOUT_MS || 30000);
 
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': req.headers['access-control-request-headers'] || '*',
-    'Access-Control-Expose-Headers': '*'
+    'Access-Control-Allow-Headers': req.headers['access-control-request-headers'] || 'Content-Type',
+    'Access-Control-Expose-Headers': 'Content-Length'
   };
 
   if (req.method === 'OPTIONS') {
@@ -28,6 +28,19 @@ http.createServer((req, res) => {
   }
 
   let target = req.url.slice(1);
+  try {
+    const check = new URL(target.startsWith('http') ? target : 'https://' + target);
+    const host = check.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1' ||
+        /^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+        /^169\.254\./.test(host) || /^127\./.test(host)) {
+      res.writeHead(403, corsHeaders);
+      res.end('Blocked private/loopback host');
+      return;
+    }
+  } catch (e) {
+    // fall through to normal URL parsing
+  }
   if (target.startsWith('https://')) {
     // already a full URL, use as is
   } else if (target.startsWith('http://')) {
@@ -52,7 +65,7 @@ http.createServer((req, res) => {
   headers.host = targetUrl.host;
   // MangaDex blocks browser User-Agents on its cover CDN. Replace with a
   // non-browser UA so images can be fetched and displayed.
-  if (targetUrl.hostname.includes('mangadex.org')) {
+  if (targetUrl.hostname === 'mangadex.org' || targetUrl.hostname.endsWith('.mangadex.org')) {
     headers['user-agent'] = 'facaccimo/1.0 (local tool)';
   }
 
@@ -105,6 +118,7 @@ http.createServer((req, res) => {
   });
 
   req.pipe(proxyReq);
-}).listen(PORT, '127.0.0.1', () => {
+server.maxConnections = 20;
+server.listen(PORT, '127.0.0.1', () => {
   console.log('CORS proxy listening on http://localhost:' + PORT);
 });

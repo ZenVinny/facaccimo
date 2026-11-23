@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { Buffer } from 'buffer'
 import './theme.css'
 import App from './App.vue'
-import naive from 'naive-ui'
 import { message, dialog, loadingBar, prompt, promptPair, confirmAction, linkDialog } from './ui'
 
 // Tools like @isomorphic-git/lightning-fs read Buffer off the window object.
@@ -12,7 +11,6 @@ if (typeof window !== 'undefined') {
 }
 
 const app = createApp(App)
-app.use(naive)
 app.config.globalProperties.$message = message
 app.config.globalProperties.$dialog = dialog
 app.config.globalProperties.$loadingBar = loadingBar

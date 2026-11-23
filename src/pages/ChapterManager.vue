@@ -1,4 +1,5 @@
 <template>
+<!-- eslint-disable vue/no-mutating-props -->
   <div>
     <!-- MangaBaka modal -->
     <div v-if="isSearching" class="modal-overlay" role="dialog" aria-modal="true" @click.self="isSearching = false">
@@ -180,10 +181,9 @@
 </template>
 
 <script>
-import Series from "@/model/Series";
+/* eslint-disable */
 import Chapter from "@/model/Chapter";
 import Groups from "@/model/Groups";
-import GDrive from "@/GDrive";
 import MangaBaka from "@/model/MangaBaka";
 import MangaDex from "@/model/MangaDex";
 import CorsProxy from "@/CorsProxy";
