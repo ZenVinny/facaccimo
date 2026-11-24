@@ -211,7 +211,8 @@ export default {
   },
   computed: {
     sortedChapters() {
-      return Object.keys(this.series.chapters).sort(this.compareChapterNames);
+      const chapters = (this.series && this.series.chapters) ? this.series.chapters : {};
+      return Object.keys(chapters).sort(this.compareChapterNames);
     },
     allSelected() {
       return this.sortedChapters.length > 0 && this.checkedRows.length === this.sortedChapters.length;
@@ -220,8 +221,18 @@ export default {
       return this.checkedRows.length > 0 && this.checkedRows.length < this.sortedChapters.length;
     }
   },
+  watch: {
+    'series.chapters': {
+      deep: true,
+      handler() {
+        const ch = (this.series && this.series.chapters) ? this.series.chapters : {};
+        this.checkedRows = (this.checkedRows || []).filter(k => Object.prototype.hasOwnProperty.call(ch, k));
+      }
+    }
+  },
   methods: {
     openMangaBaka() {
+      if (this.mbLoading) return;
       const query = (this.series.title || this.name || '').replace(/\.json$/i, '').trim();
       if (!query) {
         this.$message.warning('Set a title first');
@@ -229,6 +240,7 @@ export default {
       }
       this.mbQuery = query;
       this.mbResults = [];
+      this.mbTotal = 0;
       this.isSearching = true;
       this.mbLoading = true;
       MangaBaka.search(query)
@@ -451,15 +463,18 @@ export default {
         defaultValue: key + '',
         positiveText: 'Create',
         validate: value => {
-          const trimmed = String(value).trim();
-          if (trimmed === '') {
-            return 'Chapter number cannot be empty';
+            const trimmed = String(value).trim();
+            if (trimmed === '') {
+              return 'Chapter number cannot be empty';
+            }
+            if (!/^[A-Za-z0-9._-]+$/.test(trimmed)) {
+              return 'Invalid chapter key';
+            }
+            if (Object.prototype.hasOwnProperty.call(this.series.chapters, trimmed)) {
+              return 'Chapter ' + trimmed + ' already exists';
+            }
+            return null;
           }
-          if (Object.prototype.hasOwnProperty.call(this.series.chapters, trimmed)) {
-            return 'Chapter ' + trimmed + ' already exists';
-          }
-          return null;
-        }
       });
       if (value !== null) {
         this.editChapter(value.trim());

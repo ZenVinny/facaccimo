@@ -14,8 +14,10 @@ function readJson(response) {
 export default class MangaBaka {
 
   static search(query, limit = 6, page = 1) {
+    const safeLimit = Math.max(1, Math.min(100, Number(limit) || 6));
+    const safePage = Math.max(1, Number(page) || 1);
     const url = API + '/v2/series/search?q=' + encodeURIComponent(query) +
-        '&limit=' + limit + '&page=' + page;
+        '&limit=' + safeLimit + '&page=' + safePage;
     return fetch(url)
         .then(readJson)
         .then(body => ({
@@ -37,18 +39,19 @@ export default class MangaBaka {
       title: MangaBaka.title(item),
       type: item.type || '',
       status: item.status || '',
-      year: item.published && item.published.start_date ? item.published.start_date.slice(0, 4) : ''
+      year: item.published && typeof item.published.start_date === 'string' && item.published.start_date.length >= 4
+          ? item.published.start_date.slice(0, 4) : ''
     };
   }
 
   // Primary English title, falling back to any English title, then any primary one.
   static title(series) {
-    const titles = Array.isArray(series.titles) ? series.titles : [];
+    const titles = Array.isArray(series.titles) ? series.titles.filter(t => t && typeof t === 'object') : [];
     const match = titles.find(t => t.language === 'en' && t.is_primary)
         || titles.find(t => t.language === 'en')
         || titles.find(t => t.is_primary)
         || titles[0];
-    return match ? match.title : '';
+    return match && typeof match.title === 'string' ? match.title : (match && match.title != null ? String(match.title) : '');
   }
 
   static tags(series) {
@@ -57,7 +60,9 @@ export default class MangaBaka {
         .sort((a, b) => {
           const wa = WEIGHT_ORDER[a.weight] === undefined ? 1 : WEIGHT_ORDER[a.weight];
           const wb = WEIGHT_ORDER[b.weight] === undefined ? 1 : WEIGHT_ORDER[b.weight];
-          return wa !== wb ? wa - wb : a.name.localeCompare(b.name);
+          const na = a && a.name != null ? String(a.name) : '';
+          const nb = b && b.name != null ? String(b.name) : '';
+          return wa !== wb ? wa - wb : na.localeCompare(nb);
         })
         .map(tag => tag.name);
   }
@@ -69,12 +74,13 @@ export default class MangaBaka {
         .filter(line => !/^\s*(tags|status)\s*:/i.test(line))
         .join('\n')
         .trim();
+    const sanitize = (v) => String(v == null ? '' : v).replace(/[\r\n]+/g, ' ').trim();
     const lines = [];
     if (status) {
-      lines.push('Status: ' + status);
+      lines.push('Status: ' + sanitize(status));
     }
     if (tags && tags.length > 0) {
-      lines.push('Tags: ' + tags.join(', '));
+      lines.push('Tags: ' + tags.map(sanitize).join(', '));
     }
     if (lines.length === 0) {
       return kept;

@@ -18,4 +18,8 @@ app.config.globalProperties.$prompt = prompt
 app.config.globalProperties.$promptPair = promptPair
 app.config.globalProperties.$confirm = confirmAction
 app.config.globalProperties.$link = linkDialog
-app.mount('#app')
+try {
+  app.mount('#app')
+} catch (e) {
+  console.error('Failed to mount app:', e && e.message ? e.message : e)
+}

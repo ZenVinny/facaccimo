@@ -41,7 +41,8 @@ export default class GitHubUtils {
     // the pages instead of showing only the first page.
     static async getAllRepos(username, pat) {
         const repos = [];
-        for (let page = 1; page <= 10; page++) {
+        let page = 1;
+        while (page <= 50) {
             const response = await GitHubUtils.getRepoList(username, pat, { page: page });
             const batch = (response && response.data) || [];
             repos.push(...batch);
@@ -49,6 +50,7 @@ export default class GitHubUtils {
             if (batch.length < 100 || !link || String(link).indexOf('rel="next"') === -1) {
                 break;
             }
+            page++;
         }
         return repos;
     }
@@ -207,7 +209,17 @@ export default class GitHubUtils {
     }
 
     static async rename(oldName, newName, fs) {
-        const data = await fs.promises.readFile('/' + oldName);
+        if (typeof oldName !== 'string' || typeof newName !== 'string' ||
+            !oldName || !newName || /[\\/]/.test(oldName) || /[\\/]/.test(newName) ||
+            oldName === '.' || oldName === '..' || newName === '.' || newName === '..') {
+            throw new Error('Invalid file name');
+        }
+        let data;
+        try {
+            data = await fs.promises.readFile('/' + oldName);
+        } catch (e) {
+            throw new Error('Source file not found: ' + oldName);
+        }
         await fs.promises.writeFile('/' + newName, data);
         await fs.promises.unlink('/' + oldName);
         await git.remove({ fs: fs, dir: '/', filepath: oldName });
@@ -228,7 +240,11 @@ export default class GitHubUtils {
     static getBase64EncodedSlug(rawGithubUrl) {
         const url = new URL(rawGithubUrl);
         // Base64 URL-encoded with no padding
-        return btoa(unescape(encodeURIComponent(url.host.split('.')[0] + url.pathname)))
+        const raw = url.host.split('.')[0] + url.pathname;
+        const bytes = new TextEncoder().encode(raw);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        return btoa(binary)
             .replace(/\+/g, "-")
             .replace(/\//g, "_")
             .replace(/=/g, "");
@@ -258,7 +274,7 @@ class RepositoryExtension extends Requestable {
      */
     constructor(fullname, auth) {
         super(auth, null, "mercy-preview");
-        this.__fullname = fullname;
+        this.__fullname = String(fullname || '').split('/').map(s => encodeURIComponent(s)).join('/');
     }
 
     /**

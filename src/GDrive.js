@@ -20,10 +20,11 @@ function splitLines(value) {
 function toDownloadUrls(values, regex) {
   return values.map(value => {
     const exec = regex.exec(value);
-    if (!exec) {
+    if (!exec || !exec[1]) {
       throw new Error('Not a Google Drive file URL: ' + value);
     }
-    return DOWNLOAD_URL + exec[1] + '&export=download';
+    const id = encodeURIComponent(exec[1]);
+    return DOWNLOAD_URL + id + '&export=download';
   });
 }
 

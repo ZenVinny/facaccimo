@@ -1,11 +1,11 @@
 const webpack = require('webpack');
-const FAST = process.env.FAST === '1';
+const FAST = process.env.FAST === '1' && process.env.NODE_ENV !== 'production';
 
 module.exports = {
   publicPath: './',
   outputDir: 'dist',
   productionSourceMap: false,
-  lintOnSave: false,
+  lintOnSave: true,
   configureWebpack: {
     resolve: {
       fallback: {

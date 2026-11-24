@@ -1,17 +1,21 @@
-export default class Proxy {
+export default class PageProxy {
 
     static PROXIES = [
-        new Proxy('mangadex', 'MangaDex', /^https:\/\/mangadex.org\/chapter\/([\d\w-]+)\/?$/),
-        new Proxy('imgur', 'Imgur', /^https:\/\/imgur.com\/(?:a|gallery)\/([-\d\w]+)\/?$/),
-        new Proxy('imgchest', 'Image Chest', /^https:\/\/imgchest.com\/p\/([-\d\w]+)\/?$/),
-        new Proxy('mangasee', 'MangaSee', /^https:\/\/mangasee123.com\/read-online\/([\d\w-]+)-page-[\d]+\.html$/),
-        new Proxy('mangakatana', 'MangaKatana', /^https:\/\/mangakatana.com\/manga\/([\d\w-.]+)\/c(\d+)\/?$/, function (name, exec) {
-            return '/proxy/api/' + name + '/chapter/' + btoa(String(exec[0]).replace(/\/+$/, '')) + '/';
+        new PageProxy('mangadex', 'MangaDex', /^https:\/\/mangadex.org\/chapter\/([\d\w-]+)\/?$/),
+        new PageProxy('imgur', 'Imgur', /^https:\/\/imgur.com\/(?:a|gallery)\/([-\d\w]+)\/?$/),
+        new PageProxy('imgchest', 'Image Chest', /^https:\/\/imgchest.com\/p\/([-\d\w]+)\/?$/),
+        new PageProxy('mangasee', 'MangaSee', /^https:\/\/mangasee123.com\/read-online\/([\d\w-]+?)-page-[\d]+\.html$/),
+        new PageProxy('mangakatana', 'MangaKatana', /^https:\/\/mangakatana.com\/manga\/([\d\w-.]+)\/c(\d+)\/?$/, function (name, exec) {
+            const raw = String(exec[0]).replace(/\/+$/, '');
+            const bytes = new TextEncoder().encode(raw);
+            let binary = '';
+            for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+            return '/proxy/api/' + name + '/chapter/' + btoa(binary) + '/';
         }),
-        new Proxy('dynasty', 'Dynasty Scans', /^https:\/\/dynasty-scans.com\/chapters\/([\d\w_]+_ch[\d]+)$/),
-        new Proxy('catbox', 'Catbox', /^https:\/\/catbox.moe\/c\/(\w+)\/?$/),
+        new PageProxy('dynasty', 'Dynasty Scans', /^https:\/\/dynasty-scans.com\/chapters\/([\d\w_]+_ch[\d]+)$/),
+        new PageProxy('catbox', 'Catbox', /^https:\/\/catbox.moe\/c\/(\w+)\/?$/),
     ]
-    static PROXY_REGEX = /^\/proxy\/api\/(\w+)\/chapter\/([\d\w=+/]+)\/?/
+    static PROXY_REGEX = /^\/proxy\/api\/(\w+)\/chapter\/([\d\w=+/]+)\/?$/
     _name;
     _niceName;
     urlRegex;
@@ -28,9 +32,10 @@ export default class Proxy {
     }
 
     static getProxyByProxyUrl(url) {
-        let exec = Proxy.PROXY_REGEX.exec(url);
+        if (typeof url !== 'string') return null;
+        let exec = PageProxy.PROXY_REGEX.exec(url);
         if (exec) {
-            for (const proxy of Proxy.PROXIES) {
+            for (const proxy of PageProxy.PROXIES) {
                 if (proxy.name === exec[1]) {
                     return proxy;
                 }
@@ -40,7 +45,8 @@ export default class Proxy {
     }
 
     static getProxyByUrl(url) {
-        for (const proxy of Proxy.PROXIES) {
+        if (typeof url !== 'string') return null;
+        for (const proxy of PageProxy.PROXIES) {
             if (proxy.urlRegex.test(url)) {
                 return proxy;
             }
@@ -49,10 +55,12 @@ export default class Proxy {
     }
 
     getProxyUrl(url) {
+        if (typeof url !== 'string') return null;
         let exec = this.urlRegex.exec(url);
         if (exec) {
             return this.urlConstructor(this.name, exec);
         }
+        return null;
     }
 
     get name() {

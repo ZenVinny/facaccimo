@@ -28,7 +28,10 @@ export default class Imgur {
     let urls = String(url || '').split('\n').map(s => s.trim()).filter(Boolean);
     return Promise.allSettled(urls.map(u => {
       let id = Imgur.getAlbumId(u);
-      return CorsProxy.get('https://api.imgur.com/post/v1/albums/' + id + '?client_id=' + CLIENT_ID + '&include=media%2Cadconfig%2Caccount%2Ctags')
+    if (!id) {
+      return Promise.reject(new Error('Invalid Imgur album URL: ' + u));
+    }
+    return CorsProxy.get('https://api.imgur.com/post/v1/albums/' + encodeURIComponent(id) + '?client_id=' + CLIENT_ID + '&include=media%2Cadconfig%2Caccount%2Ctags')
           .then(value => {
             if (!value.ok) {
               throw new Error('Failed to fetch imgur album: ' + value.status);

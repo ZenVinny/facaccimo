@@ -1,14 +1,34 @@
 export default class Groups {
 
+    static _safeKey(name) {
+        const key = (name == null ? '' : String(name));
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') return null;
+        return key;
+    }
+
     static getProxyGroup(groupName, url) {
-        let result = {};
-        result[groupName] = url;
+        const key = this._safeKey(groupName);
+        if (key === null) return Object.create(null);
+        const result = Object.create(null);
+        result[key] = url;
         return result;
     }
 
     static getImagesGroup(groupName, urls) {
-        let result = {};
-        result[groupName] = String(urls ?? '').split('\n');
+        const key = this._safeKey(groupName);
+        if (key === null) return Object.create(null);
+        let list;
+        if (Array.isArray(urls)) {
+            list = urls.map(u => (u == null ? '' : String(u)));
+        } else if (typeof urls === 'string') {
+            list = urls.split('\n');
+        } else if (urls == null) {
+            list = [];
+        } else {
+            list = String(urls).split('\n');
+        }
+        const result = Object.create(null);
+        result[key] = list;
         return result;
     }
 
@@ -21,26 +41,28 @@ export default class Groups {
     }
 
     static getGroupName(groups) {
-        if (!groups) return '';
+        if (!groups || typeof groups !== 'object') return '';
         const keys = Object.keys(groups);
         return keys.length ? keys[0] : '';
     }
 
     static isProxy(groups) {
-        if (!groups) return false;
+        if (!groups || typeof groups !== 'object') return false;
         const name = this.getGroupName(groups);
+        if (name === '') return false;
         const value = groups[name];
-        return typeof (value ?? []) === "string";
+        return typeof value === 'string';
     }
 
     static getPages(groups) {
-        if (!groups) return '';
+        if (!groups || typeof groups !== 'object') return '';
         const name = this.getGroupName(groups);
-        const imgs = groups[name] ?? [];
-        if (typeof imgs === "string") {
+        const imgs = groups[name];
+        if (imgs == null) return '';
+        if (typeof imgs === 'string') {
             return imgs;
         }
-        return Array.isArray(imgs) ? imgs.join('\n') : String(imgs ?? '');
+        return Array.isArray(imgs) ? imgs.join('\n') : String(imgs);
     }
 
 }

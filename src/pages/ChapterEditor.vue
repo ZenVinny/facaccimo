@@ -1,7 +1,7 @@
 <template>
 <!-- eslint-disable vue/no-mutating-props -->
   <div>
-    <div class="modal-overlay" v-if="isImporting" role="dialog" aria-modal="true" @click.self="isImporting = false">
+    <div class="modal-overlay" v-if="isImporting" role="dialog" aria-modal="true" @click.self="isImporting = false" @keydown.esc="isImporting = false">
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Import</p>
@@ -112,7 +112,7 @@ import Groups from "@/model/Groups";
 import Reddit from "@/Reddit";
 import GDrive from "@/GDrive";
 import Imgur from "@/Imgur";
-import Proxy from "@/model/Proxy";
+import PageProxy from "@/model/Proxy";
 
 export default {
   name: 'ChapterEditor',
@@ -151,8 +151,16 @@ export default {
     this.originalDatetimeLocal = this.datetimeLocal;
   },
   watch: {
-    isProxy() {
-      this.onProxyUrlChange();
+    chapter() {
+      this.beforeMount();
+    },
+    isProxy(newVal, oldVal) {
+      if (newVal && !oldVal) {
+        this._originalPages = this.pages;
+        this.onProxyUrlChange();
+      } else if (!newVal && oldVal && this._originalPages) {
+        this.pages = this._originalPages;
+      }
     }
   },
   methods: {
@@ -221,7 +229,6 @@ export default {
       } else if (this.importType === this.IMPORT_TYPE_IMGUR) {
         this.parseImgur(this.importContent);
       }
-      this.isImporting = false;
     },
     parseGDrive(urls) {
       if (GDrive.isGDriveUrl(urls)) {
@@ -280,7 +287,7 @@ export default {
       }
     },
     onProxyUrlChange() {
-      let proxy = Proxy.getProxyByUrl(this.pages);
+      let proxy = PageProxy.getProxyByUrl(this.pages);
       if (proxy) {
         this.pages = proxy.getProxyUrl(this.pages);
       }

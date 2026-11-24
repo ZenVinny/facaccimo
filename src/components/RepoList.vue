@@ -5,9 +5,10 @@
       <div class="field">
         <label class="label">Select a repository</label>
         <div class="control">
-          <input class="input" v-model="repo" placeholder="Choose repository" @focus="openDropdown">
+          <input class="input" v-model="repo" placeholder="Choose repository" role="combobox"
+                 aria-expanded="true" aria-haspopup="listbox" @focus="openDropdown" @keydown.esc="showDropdown = false">
         </div>
-        <div v-if="filteredDataObj.length > 0" class="dropdown-list">
+        <div v-if="filteredDataObj.length > 0" class="dropdown-list" role="listbox">
           <div v-for="option in filteredDataObj" :key="option.full_name"
                class="dropdown-item" @click="selectRepo(option)">
             {{ option.full_name }}
@@ -25,8 +26,8 @@ import GitHubUtils from "@/GitHubUtils";
 export default {
   name: 'RepoList',
   props: {
-    username: String,
-    pat: String
+    username: { type: String, default: '' },
+    pat: { type: String, default: '' }
   },
   data: function () {
     return {
@@ -40,18 +41,15 @@ export default {
     filteredDataObj() {
       if (!this.showDropdown) return [];
       return this.repos.filter(option => {
-        return (
-          String(option.full_name ?? '')
-            .toString()
-            .toLowerCase()
-            .indexOf(this.repo.toLowerCase()) >= 0
-        )
+        const name = option && option.full_name != null ? String(option.full_name) : '';
+        return name.toLowerCase().indexOf(this.repo.toLowerCase()) >= 0;
       })
     }
   },
   methods: {
     selectRepo(option) {
-      this.repo = option.full_name;
+      if (!option || option.full_name == null) return;
+      this.repo = String(option.full_name);
       this.showDropdown = false;
       this.$emit('repo-selected', option);
     },
@@ -61,17 +59,20 @@ export default {
   },
   beforeMount() {
     GitHubUtils.getAllRepos(this.username, this.pat).then(repos => {
+      if (!this._alive) return;
       this.repos = Array.isArray(repos) ? repos : [];
       this.loading = false;
       if (this.repos.length === 0) {
         this.$message.warning('No repositories found for this account.');
       }
     }).catch(error => {
+      if (!this._alive) return;
       this.loading = false;
       this.$message.error('Failed to load repositories: ' + (error && error.message ? error.message : 'unknown error'));
     });
   },
   mounted() {
+    this._alive = true;
     this._outsideClick = (e) => {
       if (this.showDropdown && this.$el && !this.$el.contains(e.target)) {
         this.showDropdown = false;
@@ -80,6 +81,7 @@ export default {
     document.addEventListener('click', this._outsideClick);
   },
   beforeUnmount() {
+    this._alive = false;
     if (this._outsideClick) {
       document.removeEventListener('click', this._outsideClick);
     }

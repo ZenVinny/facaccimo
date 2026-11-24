@@ -329,12 +329,13 @@ export function linkDialog(options = {}) {
               href: safeUrl,
               target: '_blank',
               rel: 'noopener noreferrer',
-              title: safeUrl
             }, safeUrl)
           : h('span', { class: 'hx-link-field' }, props.url)
       ])
     }
   }
+
+  const safeUrl = /^https?:\/\//i.test(url) ? url : null
 
   return new Promise(resolve => {
     let settled = false
@@ -350,7 +351,7 @@ export function linkDialog(options = {}) {
       content: () => h(LinkBody, { text, url }),
       positiveText,
       onPositiveClick: async () => {
-        const copied = await copyToClipboard(url)
+        const copied = safeUrl ? await copyToClipboard(safeUrl) : false
         if (copied) {
           message.success('Link copied to clipboard')
           finish(url)
@@ -395,7 +396,10 @@ export function confirmAction(options = {}) {
         resolve(value)
       }
     }
-    const method = typeof dialog[type] === 'function' ? dialog[type] : dialog.info
+    const method = type === 'error' ? dialog.error
+        : type === 'warning' ? dialog.warning
+        : type === 'success' ? dialog.success
+        : dialog.info
     method.call(dialog, {
       title,
       content,

@@ -12,32 +12,32 @@
               <p>Additionally you can contact me on Discord (stirante).</p>
             </div>
             <p v-if="step === 1">Do you have a GitHub account?</p>
-            <p v-if="step === 2">Create an account <a href="https://github.com/" target="_blank">here</a></p>
+            <p v-if="step === 2">Create an account <a href="https://github.com/" target="_blank" rel="noopener noreferrer">here</a></p>
             <p v-if="step === 3">Do you have a Personal Access Token?</p>
             <div v-if="step === 4">
               <p>Create a Personal Access Token (or use existing one if already created) <a
                 href="https://github.com/settings/tokens/new?scopes=repo,user:email&description=facaccimo"
-                target="_blank">here</a>
+ target="_blank" rel="noopener noreferrer">here</a>
               </p>
             </div>
             <div v-if="step === 5">
               <p>Fill your GitHub username and Personal Access Token</p>
               <div class="field">
-                <label class="label">Username</label>
-                <div class="control">
-                  <input class="input" v-model="username" required placeholder="Username">
+                <label class="label" for="hp-username">Username</label>
+              <div class="control">
+                <input id="hp-username" class="input" v-model="username" required placeholder="Username">
                 </div>
               </div>
               <div class="field">
-                <label class="label">Personal Access Token</label>
-                <div class="control">
-                  <input class="input" v-model="pat" required placeholder="Personal Access Token">
+                <label class="label" for="hp-pat">Personal Access Token</label>
+              <div class="control">
+                <input id="hp-pat" class="input" v-model="pat" required placeholder="Personal Access Token">
                 </div>
               </div>
               <div class="field">
-                <label class="label">Discord webhook URL (optional)</label>
-                <div class="control">
-                  <input class="input" v-model="discordWebhook" placeholder="https://discord.com/api/webhooks/...">
+                <label class="label" for="hp-webhook">Discord webhook URL (optional)</label>
+              <div class="control">
+                <input id="hp-webhook" class="input" v-model="discordWebhook" placeholder="https://discord.com/api/webhooks/...">
                 </div>
                 <p class="help">Paste a Discord channel webhook URL to get a notification on every save or delete. Leave blank to disable.</p>
               </div>
@@ -46,9 +46,9 @@
             <div v-if="step === 7">
               <p>Set the repository name</p>
               <div class="field">
-                <label class="label">Repository name</label>
-                <div class="control">
-                  <input class="input" v-model="repoName" required placeholder="Repository name">
+                <label class="label" for="hp-repo">Repository name</label>
+              <div class="control">
+                <input id="hp-repo" class="input" v-model="repoName" required placeholder="Repository name">
                 </div>
               </div>
             </div>
@@ -93,6 +93,7 @@ export default {
       email: '',
       discordWebhook: '',
       saved: false,
+      busy: false,
     }
   },
   methods: {
@@ -123,11 +124,22 @@ export default {
         this.step = 5;
         this.actionType = this.ACTION_NEXT;
       } else if (this.step === 5) {
+        if (!this.username || !this.pat) {
+          this.$message.error('Username and Personal Access Token are required.');
+          return;
+        }
+        if (this.discordWebhook && !/^https:\/\/discord\.com\/api\/webhooks\//.test(this.discordWebhook)) {
+          this.$message.error('Invalid Discord webhook URL.');
+          return;
+        }
+        if (this.busy) return;
+        this.busy = true;
         let target = this;
         this.$emit('loading', 'Checking token');
         GitHubUtils.getEmail(this.username, this.pat).then(email => {
           target.email = email;
           this.$emit('loaded');
+          target.busy = false;
           target.step = 6;
           target.actionType = this.ACTION_YES_NO;
         }).catch(() => {
@@ -153,6 +165,7 @@ export default {
               })
               .catch(error => {
                 this.$emit('loaded');
+                this.busy = false;
                 const status = error && (error.status || (error.response && error.response.status));
                 if (status === 401 || status === 403) {
                   this.$message.error('Invalid credentials!');
@@ -171,19 +184,29 @@ export default {
         }
       } else if (this.step === 7 || this.step === 8) {
         if (this.step === 7) {
-          if (!this.repoName || !this.repoName.trim()) {
+          const repoName = (this.repoName || '').trim();
+          if (!repoName) {
             this.$message.error('Repository name cannot be empty');
             return;
           }
+          if (!/^[A-Za-z0-9._-]+$/.test(repoName)) {
+            this.$message.error('Invalid repository name.');
+            return;
+          }
+          if (this.busy) return;
+          this.busy = true;
+          this.repoName = repoName;
           let target = this;
           this.$emit('loading', 'Creating repo');
           GitHubUtils.createRepo(this.username, this.pat, this.repoName).then(value1 => {
             target.repoName = value1.data.full_name;
             this.$emit('loaded');
+            this.busy = false;
             this.step = 9;
             this.actionType = this.ACTION_YES_NO;
           }).catch(err => {
             this.$emit('loaded');
+            this.busy = false;
             this.$message.error('Failed to create repository: ' + (err && err.message ? err.message : 'unknown error'));
           });
         } else {
@@ -206,10 +229,14 @@ export default {
       this.actionType = this.ACTION_NEXT;
     },
     goToManager() {
+      if (this.busy) return;
+      this.busy = true;
       let target = this;
       GitHubUtils.createGH(this.username, this.pat).getUser().getProfile().then(() => {
+        target.busy = false;
         target.$emit('finished', {pat: target.pat, username: target.username, repoName: target.repoName, email: target.email, discordWebhook: target.discordWebhook});
       }).catch(async err => {
+        target.busy = false;
         console.log(err);
         const status = err && (err.status || (err.response && err.response.status));
         if (status !== 401 && status !== 403) {

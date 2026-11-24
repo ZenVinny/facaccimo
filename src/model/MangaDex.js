@@ -5,8 +5,9 @@ export default class MangaDex {
   static API = 'https://api.mangadex.org';
 
   static async search(query, limit = 6) {
+    const safeLimit = Math.max(1, Math.min(100, Number(limit) || 6));
     const url = MangaDex.API + '/manga?title=' + encodeURIComponent(query) +
-        '&limit=' + limit + '&includes[]=cover_art';
+        '&limit=' + safeLimit + '&includes[]=cover_art';
     const response = await CorsProxy.get(url, { 'User-Agent': 'facaccimo/1.0 (local tool)' });
     if (!response.ok) {
       throw new Error('Search failed (' + response.status + ')');
@@ -19,32 +20,40 @@ export default class MangaDex {
     const all = [];
     let offset = 0;
     let total = Infinity;
-    while (offset < total) {
-      const url = MangaDex.API + '/manga/' + mangaId + '/feed?includeUnavailable=1' +
+    let guard = 0;
+    const safeId = encodeURIComponent(mangaId);
+    while (offset < total && guard < 1000) {
+      guard++;
+      const url = MangaDex.API + '/manga/' + safeId + '/feed?includeUnavailable=1' +
           '&limit=500&offset=' + offset + '&order[chapter]=asc';
       const response = await CorsProxy.get(url, { 'User-Agent': 'facaccimo/1.0 (local tool)' });
       if (!response.ok) {
         throw new Error('Failed to fetch chapters (' + response.status + ')');
       }
       const body = await response.json();
-      const data = body.data || [];
+      const data = Array.isArray(body.data) ? body.data : [];
       all.push(...data);
       if (typeof body.total === 'number') {
         total = body.total;
       }
-      offset += data.length;
-      if (data.length === 0) break;
+      const nextOffset = offset + data.length;
+      if (data.length === 0 || nextOffset === offset) break;
+      offset = nextOffset;
+      if (offset >= total) break;
     }
     // Deduplicate by chapter number, preferring English
-    const byNumber = {};
+    const byNumber = Object.create(null);
     for (const ch of all) {
+      if (!ch || !ch.attributes || typeof ch.attributes !== 'object') continue;
       const attr = ch.attributes;
       const num = attr.chapter;
       if (num === null || num === undefined || num === '') continue;
-      if (!byNumber[num]) {
-        byNumber[num] = ch;
-      } else if (attr.translatedLanguage === 'en' && byNumber[num].attributes.translatedLanguage !== 'en') {
-        byNumber[num] = ch;
+      const key = String(num);
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
+      if (!byNumber[key]) {
+        byNumber[key] = ch;
+      } else if (attr.translatedLanguage === 'en' && byNumber[key].attributes && byNumber[key].attributes.translatedLanguage !== 'en') {
+        byNumber[key] = ch;
       }
     }
     return Object.values(byNumber).map(ch => {
@@ -72,7 +81,7 @@ export default class MangaDex {
     const fileName = coverRel && coverRel.attributes ? coverRel.attributes.fileName : null;
     const mangaId = item.id;
     const coverUrl = fileName
-        ? 'https://uploads.mangadex.org/covers/' + mangaId + '/' + fileName
+        ? 'https://uploads.mangadex.org/covers/' + encodeURIComponent(mangaId) + '/' + encodeURIComponent(fileName)
         : null;
     return {
       id: mangaId,

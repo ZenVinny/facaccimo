@@ -126,17 +126,22 @@ export default {
         positiveText: 'Create'
       });
       if (name) {
-        this.goToSeries(name);
+        this.goToSeries(name, true);
       }
     },
-    goToSeries(name) {
+    goToSeries(name, isNew = false) {
       name = String(name || "").trim().replace(/\s+/g, "-");
+      name = name.replace(/[\\/\\\\:*?"<>|]/g, '');
       if (!name) {
         this.$message.warning('File name cannot be empty');
         return;
       }
       if (!name.toLowerCase().endsWith(".json")) {
         name = name + ".json";
+      }
+      if (isNew && this.series && this.series.some(s => s.name === name)) {
+        this.$message.warning('A series with that name already exists.');
+        return;
       }
       this.$emit("series", name);
     },

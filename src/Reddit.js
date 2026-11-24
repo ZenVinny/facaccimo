@@ -21,7 +21,12 @@ function toJsonUrl(value) {
 }
 
 function decodeHtml(value) {
-  return String(value).replace(/&amp;/g, '&');
+  return String(value)
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
 }
 
 function isHttpUrl(value) {
@@ -85,6 +90,9 @@ export default class Reddit {
   // the rest of the batch.
   static getImgArray(url) {
     const lines = splitLines(url);
+    if (!lines.every(v => URL_REGEX.test(v))) {
+      throw new Error('Invalid Reddit URL');
+    }
     return Promise.allSettled(lines.map(value => {
       return CorsProxy.get(toJsonUrl(value)).then(response => {
         if (!response.ok) {
