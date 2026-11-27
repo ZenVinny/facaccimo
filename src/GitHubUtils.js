@@ -5,8 +5,6 @@ import LightningFS from "@isomorphic-git/lightning-fs"
 import Requestable from "github-api/dist/components/Requestable";
 import CorsProxy from "./CorsProxy";
 
-// Simple flag for testing
-
 // Rejections can be non-Error values or Errors without a message string.
 function errorMessage(err) {
     if (err && typeof err.message === 'string' && err.message) {
@@ -298,15 +296,4 @@ class RepositoryExtension extends Requestable {
         return this._request('PUT', `/repos/${this.__fullname}/topics`, { names: topics }, cb);
     }
 
-    /**
-     * Configures a GitHub Pages site
-     * @see https://docs.github.com/en/rest/reference/repos#create-a-github-pages-site
-     * @param {string} branch - The repository branch used to publish your site's source files
-     * @param {string|null} path - The repository directory that includes the source files for the Pages site
-     * @param {Requestable.callback} cb - will receive the comparison
-     * @return {Promise} - the promise for the http request
-     */
-    createPages(branch, path, cb) {
-        return this._request('POST', `/repos/${this.__fullname}/pages`, { source: { branch: branch, path: path ?? '/' } }, cb);
-    }
 }

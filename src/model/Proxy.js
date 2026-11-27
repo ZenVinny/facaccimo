@@ -31,19 +31,6 @@ export default class PageProxy {
         };
     }
 
-    static getProxyByProxyUrl(url) {
-        if (typeof url !== 'string') return null;
-        let exec = PageProxy.PROXY_REGEX.exec(url);
-        if (exec) {
-            for (const proxy of PageProxy.PROXIES) {
-                if (proxy.name === exec[1]) {
-                    return proxy;
-                }
-            }
-        }
-        return null;
-    }
-
     static getProxyByUrl(url) {
         if (typeof url !== 'string') return null;
         for (const proxy of PageProxy.PROXIES) {

@@ -57,7 +57,7 @@ const themeOverrides = {
   }
 }
 
-const { message, dialog, loadingBar } = createDiscreteApi(['message', 'dialog', 'loadingBar'], {
+const { message, dialog } = createDiscreteApi(['message', 'dialog'], {
   configProviderProps: { theme: darkTheme, themeOverrides }
 })
 
@@ -413,4 +413,4 @@ export function confirmAction(options = {}) {
   })
 }
 
-export { message, dialog, loadingBar }
+export { message, dialog }

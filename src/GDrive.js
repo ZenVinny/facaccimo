@@ -10,7 +10,7 @@ const DOWNLOAD_URL = 'https://drive.usercontent.google.com/download?id=';
 
 // Trim and drop blank lines so a trailing newline (a normal paste) does not
 // fail validation or add an empty entry.
-function splitLines(value) {
+export function splitLines(value) {
   return String(value ?? '')
       .split('\n')
       .map(line => line.trim())

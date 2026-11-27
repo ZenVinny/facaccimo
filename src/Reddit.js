@@ -1,14 +1,8 @@
 import CorsProxy from "./CorsProxy";
+import { splitLines } from "./GDrive";
 
 const URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/[^/\s]+\/comments\/[a-z0-9]+\/[a-z0-9_-]+\/?$/i;
 const IMAGE_EXT_REGEX = /\.(?:jpe?g|png|gif|webp)(?:\?.*)?$/i;
-
-function splitLines(value) {
-  return String(value ?? '')
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
-}
 
 // Reddit post URLs are usually copied with a trailing slash (the address-bar
 // form), and "<slug>/.json" is a 404. Strip it before appending the suffix.

@@ -1,11 +1,12 @@
 import CorsProxy from "./CorsProxy";
+import { splitLines } from "./GDrive";
 
 const URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?imgur\.com\/(?:a|gallery)\/([-\d\w]+)\/?$/;
 const CLIENT_ID = 'd70305e7c3ac5c6';
 
 export default class Imgur {
   static isImgurUrl(url) {
-    const lines = String(url || '').split('\n').map(s => s.trim()).filter(Boolean);
+    const lines = splitLines(url);
     return lines.length > 0 && lines.every(value => URL_REGEX.test(value));
   }
 
@@ -25,7 +26,7 @@ export default class Imgur {
   }
 
   static getImgArray(url) {
-    let urls = String(url || '').split('\n').map(s => s.trim()).filter(Boolean);
+    let urls = splitLines(url);
     return Promise.allSettled(urls.map(u => {
       let id = Imgur.getAlbumId(u);
     if (!id) {

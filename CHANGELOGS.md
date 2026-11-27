@@ -1,5 +1,6 @@
 # Changelog
 
+11.27.2026 — Removed dead code (createPages, getProxyByProxyUrl, loadingBar wiring, CorsProxy DEV_URL branch) and consolidated duplicated logic (splitLines helper, EMPTY_GROUPS sentinel, seriesQuery, allowlist dedup, RepoList _alive init) (src/GitHubUtils.js, src/model/Proxy.js, src/ui.js, src/main.js, src/CorsProxy.js, src/GDrive.js, src/Reddit.js, src/Imgur.js, src/pages/ChapterManager.vue, src/components/RepoList.vue, dev-cors-proxy.js)
 11.23.2026 — Fixed duplicate-name check blocking series edits (SeriesManager.vue)
 11.23.2026 — Preserved chapter-list scroll position on return from chapter editor (preventScroll on focus) (src/App.vue)
 11.23.2026 — Fixed remaining utilities: ui.js method lookup/copy/a11y, main.js mount handling, Proxy class rename + btoa fix (src/ui.js, src/main.js, src/model/Proxy.js)

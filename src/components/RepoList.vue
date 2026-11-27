@@ -58,6 +58,7 @@ export default {
     }
   },
   beforeMount() {
+    this._alive = true;
     GitHubUtils.getAllRepos(this.username, this.pat).then(repos => {
       if (!this._alive) return;
       this.repos = Array.isArray(repos) ? repos : [];

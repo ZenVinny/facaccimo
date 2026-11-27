@@ -1,7 +1,6 @@
 export default class CorsProxy {
 
     static URL = 'http://localhost:3000';
-    static DEV_URL = 'http://localhost:3000';
     // A stalled proxy used to hang the caller (and the global loading overlay)
     // forever; every request now gives up after this long.
     static TIMEOUT_MS = 30000;
@@ -59,9 +58,6 @@ export default class CorsProxy {
     }
 
     static getProxyUrl() {
-        if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
-            return CorsProxy.DEV_URL;
-        }
         return CorsProxy.URL;
     }
 

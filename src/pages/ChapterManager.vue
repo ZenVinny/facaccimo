@@ -190,6 +190,8 @@ import CorsProxy from "@/CorsProxy";
 
 // Guard against a typo in the batch range locking up the tab.
 const MAX_BATCH = 500;
+// Sentinel group set used for freshly created chapters that have no pages yet.
+const EMPTY_GROUPS = { "": [""] };
 
 export default {
   name: 'ChapterManager',
@@ -233,7 +235,7 @@ export default {
   methods: {
     openMangaBaka() {
       if (this.mbLoading) return;
-      const query = (this.series.title || this.name || '').replace(/\.json$/i, '').trim();
+      const query = this.seriesQuery();
       if (!query) {
         this.$message.warning('Set a title first');
         return;
@@ -288,7 +290,7 @@ export default {
       this.mdMode = mode || 'cover';
       Object.values(this.mdCoverUrls).forEach(url => URL.revokeObjectURL(url));
       this.mdCoverUrls = {};
-      const query = (this.series.title || this.name || '').replace(/\.json$/i, '').trim();
+      const query = this.seriesQuery();
       if (!query) {
         this.$message.warning('Set a title first');
         return;
@@ -341,7 +343,7 @@ export default {
               let added = 0;
               for (const ch of chapters) {
                 if (!this.series.chapters[ch.number]) {
-                  this.series.chapters[ch.number] = new Chapter(ch.title, ch.volume, ch.lastUpdated, { "": [""] });
+                  this.series.chapters[ch.number] = new Chapter(ch.title, ch.volume, ch.lastUpdated, EMPTY_GROUPS);
                   added++;
                 }
               }
@@ -516,7 +518,7 @@ export default {
       for (let i = from; i <= to; i++) {
         const key = String(i);
         if (!this.series.chapters[key]) {
-          this.series.chapters[key] = new Chapter('', '', null, { "": [""] });
+          this.series.chapters[key] = new Chapter('', '', null, EMPTY_GROUPS);
           added++;
         }
       }
@@ -543,6 +545,9 @@ export default {
     closeCoverSearch() {
       this.revokeCoverUrls();
       this.isCoverSearching = false;
+    },
+    seriesQuery() {
+      return (this.series.title || this.name || '').replace(/\.json$/i, '').trim();
     },
     compareChapterNames(a, b, isAsc = false) {
       if (a === b) return 0;

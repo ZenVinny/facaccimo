@@ -41,7 +41,6 @@ const DEFAULT_ALLOWED_HOSTS = [
   'docs.google.com',
   'lh3.googleusercontent.com',
   'api.imgur.com',
-  'old.reddit.com',
   'v.redd.it'
 ];
 
